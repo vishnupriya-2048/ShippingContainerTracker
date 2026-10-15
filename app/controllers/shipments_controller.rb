@@ -1,5 +1,5 @@
 class ShipmentsController < ApplicationController
-  before_action :set_shipment, only: %i[show edit update destroy]
+  before_action :set_shipment, only: %i[show edit update destroy mark_exception]
 
   def index
     @shipments = Shipment.includes(:latest_location).order(:shipment_identifier)
@@ -7,7 +7,6 @@ class ShipmentsController < ApplicationController
 
   def show
     @locations = @shipment.locations.to_a
-    @status_histories = @shipment.status_histories.to_a
     @status_histories = @shipment.status_histories.to_a
   end
 
@@ -38,6 +37,14 @@ class ShipmentsController < ApplicationController
   def destroy
     @shipment.destroy!
     redirect_to shipments_path, notice: "Shipment was deleted.", status: :see_other
+  end
+
+  def mark_exception
+    if @shipment.mark_exception!
+      redirect_to @shipment, notice: "Shipment was marked as an exception."
+    else
+      redirect_to @shipment, alert: "A #{@shipment.current_status.humanize.downcase} shipment can't be marked as an exception."
+    end
   end
 
   private

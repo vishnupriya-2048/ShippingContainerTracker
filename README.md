@@ -55,3 +55,38 @@ docker compose run --rm web bin/rails db:seed
   shipment's messages stay ordered.
 - Invalid messages (bad JSON, unknown shipment, out-of-range values) are copied to
   `shipment_locations_dlq` with the reason in an `error` header.
+
+## Design decisions
+
+- **Everything flows through Kafka.** Locations are never written by the web app; the
+  consumer calls `LocationRecorder`, which stores the point and applies the geofence
+  in one transaction. Replays are harmless thanks to the unique `[shipment_id, recorded_at]` index.
+- **Status rules live in one class** (`StatusDecider`): statuses only move forward,
+  `delivered` is final, and `exception` is a manual override the geofence never changes
+  (use "Mark as exception" on the shipment page).
+- **Thin front end.** Server-rendered ERB + Tailwind; Stimulus controllers (`map`, `trail`,
+  `tabs`) get their data as JSON values, with no inline JS. Tabs only toggle `hidden`, so
+  the map is never reloaded when switching tabs.
+- **No N+1 on the dashboard**: `has_one :latest_location` uses a `DISTINCT ON` subquery.
+
+## Trade-offs
+
+- The detail page loads the full trail and history in one request; fine for hundreds of
+  points, but long trails would need pagination or downsampling.
+- The page does not update live; reload to see new points (ActionCable is the next step).
+- Geofence status is evaluated per point with no route model, so a detour is not detected.
+
+## Next steps for production
+
+- Kafka: replication factor >= 3, `min.insync.replicas`, more partitions and consumers,
+  TLS/SASL, and monitoring of consumer lag.
+- Dead-letter handling: alert on `shipment_locations_dlq` and add a replay tool.
+- Authentication and authorization (the app is open today); rate limiting on forms.
+- Live updates via ActionCable, route-deviation `exception`, and error tracking.
+- Secrets via credentials/secret manager; restrict the Maps key by HTTP referrer.
+
+## Screenshots
+
+Not included yet: run the app, seed, start the simulator, and capture the dashboard and a
+shipment page (both tabs) into `docs/`.
+

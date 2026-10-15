@@ -18,6 +18,25 @@ class Shipment < ApplicationRecord
           -> { where(id: ShipmentLocation.select("DISTINCT ON (shipment_id) id").order(:shipment_id, recorded_at: :desc)) },
           class_name: "ShipmentLocation", inverse_of: :shipment
 
+  # Manual override (README `exception` status). Records the change in the status
+  # history at the latest known position (the source if nothing was reported yet).
+  # Returns false for shipments that are already delivered or in exception.
+  def mark_exception!(notes: "Marked as exception manually")
+    return false if delivered? || exception?
+
+    transaction do
+      point = locations.last
+      status_histories.create!(
+        status: "exception", changed_at: Time.current, notes: notes,
+        latitude: point&.latitude || source_latitude,
+        longitude: point&.longitude || source_longitude,
+        address: point&.address || (source_address unless point)
+      )
+      update!(current_status: "exception")
+    end
+    true
+  end
+
   validates :shipment_identifier, presence: true, uniqueness: true
   validates :source_address, :destination_address, presence: true
   validates :weight, :height, presence: true, numericality: true

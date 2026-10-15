@@ -189,4 +189,35 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "42.5 km/h"
     assert_includes response.body, "Left depot"
   end
+
+  test "show has empty states for both tabs" do
+    get shipment_url(create_shipment)
+    assert_includes response.body, "No status changes yet"
+    assert_includes response.body, "No location reported yet. Run the simulator"
+  end
+
+  test "mark_exception sets the status and records it in the history" do
+    shipment = create_shipment
+    shipment.locations.create!(latitude: 13.1, longitude: 77.6, recorded_at: 1.hour.ago, address: "Hosur Road")
+
+    patch mark_exception_shipment_url(shipment)
+
+    assert_redirected_to shipment_url(shipment)
+    assert_equal "exception", shipment.reload.current_status
+    history = shipment.status_histories.last
+    assert_equal [ "exception", 13.1, "Hosur Road" ], [ history.status, history.latitude, history.address ]
+  end
+
+  test "mark_exception refuses delivered shipments" do
+    shipment = create_shipment(current_status: "delivered")
+    assert_no_difference("ShipmentStatusHistory.count") { patch mark_exception_shipment_url(shipment) }
+    assert_redirected_to shipment_url(shipment)
+    assert_equal "delivered", shipment.reload.current_status
+  end
+
+  test "mark_exception falls back to the source when nothing was reported" do
+    shipment = create_shipment
+    patch mark_exception_shipment_url(shipment)
+    assert_in_delta 13.0285, shipment.status_histories.last.latitude
+  end
 end

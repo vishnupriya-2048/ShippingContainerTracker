@@ -46,6 +46,9 @@
     <% if notice.present? %>
       <p class="border-b border-emerald-200 bg-emerald-50 px-5 py-2 text-center text-sm text-emerald-800"><%= notice %></p>
     <% end %>
+    <% if alert.present? %>
+      <p class="border-b border-red-200 bg-red-50 px-5 py-2 text-center text-sm text-red-800"><%= alert %></p>
+    <% end %>
 
     <main class="<%= content_for?(:main_class) ? yield(:main_class) : "mx-auto w-full max-w-3xl px-5 py-8" %>">
       <%= yield %>

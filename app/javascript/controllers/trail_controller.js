@@ -4,7 +4,7 @@ import { createMap, dotPin, fitToPoints, infoContent } from "maps/google_maps"
 // Shipment detail map: the GPS trail as a polyline with direction arrows, plus
 // source, destination and current-location markers. All data arrives as values.
 export default class extends Controller {
-  static targets = ["canvas", "message"]
+  static targets = ["canvas", "message", "loading"]
   static values = {
     arrived: Boolean,   // delivered: destination pin turns into a "Delivered" pin
     path: Array,        // [{ lat, lng }, ...] oldest -> newest
@@ -36,6 +36,7 @@ export default class extends Controller {
     }
 
     this.addStatusMarkers()
+    if (this.hasLoadingTarget) this.loadingTarget.hidden = true
 
     fitToPoints(this.map, [this.sourceValue, this.destinationValue, ...this.pathValue], { padding: 56, maxZoom: 14 })
   }
@@ -171,6 +172,7 @@ export default class extends Controller {
   }
 
   showMessage = () => {
+    if (this.hasLoadingTarget) this.loadingTarget.hidden = true
     if (this.hasMessageTarget) this.messageTarget.hidden = false
   }
 }

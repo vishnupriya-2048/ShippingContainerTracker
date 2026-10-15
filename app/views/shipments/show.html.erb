@@ -23,6 +23,11 @@
   <div class="flex items-center gap-2">
     <%= link_to "Edit", edit_shipment_path(@shipment),
           class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50" %>
+    <% unless @shipment.delivered? || @shipment.exception? %>
+      <%= button_to "Mark as exception", mark_exception_shipment_path(@shipment), method: :patch,
+            form: { data: { turbo_confirm: "Mark this shipment as an exception? The geofence will no longer change its status." } },
+            class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-amber-700 ring-1 ring-inset ring-amber-200 transition hover:bg-amber-50" %>
+    <% end %>
     <%= button_to "Delete", @shipment, method: :delete,
           form: { data: { turbo_confirm: "Delete this shipment and its location history?" } },
           class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-red-600 ring-1 ring-inset ring-red-200 transition hover:bg-red-50" %>
@@ -67,6 +72,10 @@
      data-trail-points-value="<%= trail[:points].to_json %>">
 <section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]">
   <div data-trail-target="canvas" class="absolute inset-0"></div>
+
+  <div data-trail-target="loading" class="absolute inset-0 grid place-items-center bg-slate-100 text-sm text-slate-500">
+    <span class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"></span>Loading map…</span>
+  </div>
 
   <div data-trail-target="message" hidden
        class="absolute inset-0 grid place-items-center bg-slate-100 p-8 text-center">
