@@ -18,30 +18,32 @@ class Shipment < ApplicationRecord
           -> { where(id: ShipmentLocation.select("DISTINCT ON (shipment_id) id").order(:shipment_id, recorded_at: :desc)) },
           class_name: "ShipmentLocation", inverse_of: :shipment
 
-  # Manual override (README `exception` status). Records the change in the status
-  # history at the latest known position (the source if nothing was reported yet).
-  # Returns false for shipments that are already delivered or in exception.
-  def mark_exception!(notes: "Marked as exception manually")
-    return false if delivered? || exception?
-
-    transaction do
-      point = locations.last
-      status_histories.create!(
-        status: "exception", changed_at: Time.current, notes: notes,
-        latitude: point&.latitude || source_latitude,
-        longitude: point&.longitude || source_longitude,
-        address: point&.address || (source_address unless point)
-      )
-      update!(current_status: "exception")
-    end
-    true
-  end
-
   validates :shipment_identifier, presence: true, uniqueness: true
   validates :source_address, :destination_address, presence: true
-  validates :weight, :height, presence: true, numericality: true
-  validates :source_latitude, :destination_latitude,
-            presence: true, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
-  validates :source_longitude, :destination_longitude,
-            presence: true, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
+  validates :weight, :height, presence: true, numericality: { greater_than: 0 }
+  validates :source_latitude, :destination_latitude, presence: true, numericality: { in: -90..90 }
+  validates :source_longitude, :destination_longitude, presence: true, numericality: { in: -180..180 }
+
+  def can_mark_exception?
+    !(delivered? || exception?)
+  end
+
+  # Manual override (README `exception` status). Records the change in the status
+  # history at the latest known position (the source if nothing was reported yet).
+  # Returns false when the shipment is already delivered or in exception.
+  def mark_exception
+    with_lock do
+      next false unless can_mark_exception?
+
+      point = locations.last
+      latitude, longitude, address =
+        point ? [ point.latitude, point.longitude, point.address ] : [ source_latitude, source_longitude, source_address ]
+      status_histories.create!(
+        status: "exception", changed_at: Time.current, notes: "Marked as exception manually",
+        latitude: latitude, longitude: longitude, address: address
+      )
+      update!(current_status: "exception")
+      true
+    end
+  end
 end

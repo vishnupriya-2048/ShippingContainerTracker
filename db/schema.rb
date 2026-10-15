@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,7 +24,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shipment_id", "recorded_at"], name: "index_shipment_locations_on_shipment_id_and_recorded_at", unique: true
-    t.index ["shipment_id"], name: "index_shipment_locations_on_shipment_id"
+    t.check_constraint "latitude >= '-90'::integer::double precision AND latitude <= 90::double precision AND longitude >= '-180'::integer::double precision AND longitude <= 180::double precision", name: "shipment_locations_coordinate_range"
   end
 
   create_table "shipment_status_histories", force: :cascade do |t|
@@ -37,7 +37,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_090000) do
     t.datetime "changed_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shipment_id"], name: "index_shipment_status_histories_on_shipment_id"
+    t.index ["shipment_id", "changed_at"], name: "index_shipment_status_histories_on_shipment_id_and_changed_at"
+    t.check_constraint "latitude >= '-90'::integer::double precision AND latitude <= 90::double precision AND longitude >= '-180'::integer::double precision AND longitude <= 180::double precision", name: "shipment_status_histories_coordinate_range"
+    t.check_constraint "status::text = ANY (ARRAY['prepared'::character varying, 'picked_up'::character varying, 'in_transit'::character varying, 'out_for_delivery'::character varying, 'delivered'::character varying, 'exception'::character varying]::text[])", name: "shipment_status_histories_known_status"
   end
 
   create_table "shipments", force: :cascade do |t|
@@ -54,6 +56,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shipment_identifier"], name: "index_shipments_on_shipment_identifier", unique: true
+    t.check_constraint "current_status::text = ANY (ARRAY['prepared'::character varying, 'picked_up'::character varying, 'in_transit'::character varying, 'out_for_delivery'::character varying, 'delivered'::character varying, 'exception'::character varying]::text[])", name: "shipments_known_status"
+    t.check_constraint "source_latitude >= '-90'::integer::double precision AND source_latitude <= 90::double precision AND destination_latitude >= '-90'::integer::double precision AND destination_latitude <= 90::double precision", name: "shipments_latitude_range"
+    t.check_constraint "source_longitude >= '-180'::integer::double precision AND source_longitude <= 180::double precision AND destination_longitude >= '-180'::integer::double precision AND destination_longitude <= 180::double precision", name: "shipments_longitude_range"
+    t.check_constraint "weight > 0::double precision AND height > 0::double precision", name: "shipments_positive_size"
   end
 
   add_foreign_key "shipment_locations", "shipments"
