@@ -1,0 +1,112 @@
+import { Controller } from "@hotwired/stimulus"
+import { createMap, dotPin, fitToPoints, infoContent } from "maps/google_maps"
+
+// Shipment detail map: the GPS trail as a polyline with direction arrows, plus
+// source, destination and current-location markers. All data arrives as values.
+export default class extends Controller {
+  static targets = ["canvas", "message"]
+  static values = {
+    arrived: Boolean,   // delivered: destination pin turns into a "Delivered" pin
+    path: Array,        // [{ lat, lng }, ...] oldest -> newest
+    current: Object,    // { lat, lng, color, status, address, recordedAt } or {}
+    source: Object,     // { lat, lng, address }
+    destination: Object
+  }
+
+  async connect() {
+    const api = await createMap(this.canvasTarget, { onError: this.showMessage })
+    if (!api || !this.element.isConnected) return
+
+    this.map = api.map
+    this.api = api
+    this.infoWindow = new api.InfoWindow({ headerDisabled: true })
+    this.overlays = []
+
+    this.drawTrail()
+    this.addMarker(this.sourceValue, dotPin({ color: "#16a34a", label: "Source", size: "size-7", extra: "" }), "A", "Source")
+    if (this.arrivedValue) {
+      // Delivered: the trail ends here, so one green "Delivered" pin replaces B and the live dot.
+      this.addMarker(this.destinationValue, dotPin({ color: "#059669", label: "Delivered", size: "size-8", extra: "ring-4 ring-emerald-500/30" }), "✓", "Delivered")
+    } else {
+      this.addMarker(this.destinationValue, dotPin({ color: "#0f172a", label: "Destination", size: "size-7", extra: "" }), "B", "Destination")
+      if (this.hasCurrent) this.addCurrentMarker()
+    }
+
+    fitToPoints(this.map, [this.sourceValue, this.destinationValue, ...this.pathValue], { padding: 56, maxZoom: 14 })
+  }
+
+  disconnect() {
+    this.overlays?.forEach((overlay) => (overlay.map = null))
+    this.infoWindow?.close()
+  }
+
+  get hasCurrent() {
+    return this.currentValue.lat !== undefined
+  }
+
+  drawTrail() {
+    if (this.pathValue.length < 2) return
+    const line = new google.maps.Polyline({
+      map: this.map,
+      path: this.pathValue,
+      strokeColor: "#6366f1",
+      strokeOpacity: 0.9,
+      strokeWeight: 4,
+      icons: [{
+        icon: {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          scale: 3,
+          fillColor: "#ffffff",
+          fillOpacity: 1,
+          strokeColor: "#4338ca",
+          strokeWeight: 1.5
+        },
+        offset: "50px",
+        repeat: "90px"
+      }]
+    })
+    this.overlays.push({ set map(value) { line.setMap(value) } })
+  }
+
+  addMarker(point, content, glyph, title) {
+    content.textContent = glyph
+    const marker = new this.api.AdvancedMarkerElement({
+      map: this.map,
+      position: { lat: point.lat, lng: point.lng },
+      content,
+      title
+    })
+    marker.addListener("click", () => this.showInfo(marker, title, point.address))
+    this.overlays.push(marker)
+  }
+
+  addCurrentMarker() {
+    const { color, status, address, recordedAt } = this.currentValue
+    const pin = dotPin({ color, label: "Current location", size: "size-6", extra: "relative" })
+    const pulse = document.createElement("span")
+    pulse.className = "absolute inset-0 -z-10 animate-ping rounded-full opacity-60"
+    pulse.style.backgroundColor = color
+    pin.append(pulse)
+
+    const marker = new this.api.AdvancedMarkerElement({
+      map: this.map,
+      position: { lat: this.currentValue.lat, lng: this.currentValue.lng },
+      content: pin,
+      title: "Current location",
+      zIndex: 10
+    })
+    marker.addListener("click", () =>
+      this.showInfo(marker, `Current location · ${status}`, address, new Date(recordedAt).toLocaleString())
+    )
+    this.overlays.push(marker)
+  }
+
+  showInfo(marker, title, ...lines) {
+    this.infoWindow.setContent(infoContent(title, ...lines))
+    this.infoWindow.open({ map: this.map, anchor: marker })
+  }
+
+  showMessage = () => {
+    if (this.hasMessageTarget) this.messageTarget.hidden = false
+  }
+}

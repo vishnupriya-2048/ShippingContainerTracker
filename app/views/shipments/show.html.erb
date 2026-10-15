@@ -1,17 +1,84 @@
-<h1><%= @shipment.shipment_identifier %></h1>
+<% content_for :main_class, "mx-auto w-full max-w-6xl space-y-6 px-5 py-8" %>
+<% content_for :title, "#{@shipment.shipment_identifier} · Shipment Tracker" %>
 
-<dl>
-  <dt>Status</dt>
-  <dd><%= @shipment.current_status.humanize %></dd>
-  <dt>Weight (kg)</dt>
-  <dd><%= @shipment.weight %></dd>
-  <dt>Height (cm)</dt>
-  <dd><%= @shipment.height %></dd>
-  <dt>Source</dt>
-  <dd><%= @shipment.source_address %> (<%= @shipment.source_latitude %>, <%= @shipment.source_longitude %>)</dd>
-  <dt>Destination</dt>
-  <dd><%= @shipment.destination_address %> (<%= @shipment.destination_latitude %>, <%= @shipment.destination_longitude %>)</dd>
-</dl>
+<div class="flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <%= link_to shipments_path, class: "text-sm text-slate-500 hover:text-indigo-600" do %>
+      <span aria-hidden="true">&larr;</span> All shipments
+    <% end %>
+    <div class="mt-1 flex flex-wrap items-center gap-3">
+      <h1 class="text-2xl font-semibold tracking-tight"><%= @shipment.shipment_identifier %></h1>
+      <%= status_badge(@shipment.current_status) %>
+    </div>
+    <p class="mt-1 text-sm text-slate-500">
+      <% if @locations.any? %>
+        <%= pluralize(@locations.size, "location update") %> · last seen
+        <time datetime="<%= @locations.last.recorded_at.iso8601 %>" title="<%= l(@locations.last.recorded_at, format: :long) %>"><%= time_ago_in_words(@locations.last.recorded_at) %> ago</time>
+      <% else %>
+        No location reported yet
+      <% end %>
+    </p>
+  </div>
 
-<%= link_to "Edit", edit_shipment_path(@shipment) %> |
-<%= link_to "Back to shipments", shipments_path %>
+  <div class="flex items-center gap-2">
+    <%= link_to "Edit", edit_shipment_path(@shipment),
+          class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50" %>
+    <%= button_to "Delete", @shipment, method: :delete,
+          form: { data: { turbo_confirm: "Delete this shipment and its location history?" } },
+          class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-red-600 ring-1 ring-inset ring-red-200 transition hover:bg-red-50" %>
+  </div>
+</div>
+
+<section aria-label="Shipment details" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <% [
+       ["Weight", "#{number_with_delimiter(@shipment.weight)} kg"],
+       ["Height", "#{number_with_delimiter(@shipment.height)} cm"]
+     ].each do |label, value| %>
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <p class="text-xs font-medium uppercase tracking-wide text-slate-500"><%= label %></p>
+      <p class="mt-1 text-lg font-semibold tabular-nums"><%= value %></p>
+    </div>
+  <% end %>
+
+  <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+      <span class="grid size-4 place-items-center rounded-full bg-green-600 text-[9px] font-bold text-white">A</span> Source
+    </p>
+    <p class="mt-1 text-sm font-medium text-slate-800"><%= @shipment.source_address %></p>
+  </div>
+
+  <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+      <span class="grid size-4 place-items-center rounded-full bg-slate-900 text-[9px] font-bold text-white">B</span> Destination
+    </p>
+    <p class="mt-1 text-sm font-medium text-slate-800"><%= @shipment.destination_address %></p>
+  </div>
+</section>
+
+<% trail = trail_data_for(@shipment, @locations) %>
+<section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]"
+         data-controller="trail"
+         data-trail-arrived-value="<%= trail[:arrived] %>"
+         data-trail-path-value="<%= trail[:path].to_json %>"
+         data-trail-current-value="<%= trail[:current].to_json %>"
+         data-trail-source-value="<%= trail[:source].to_json %>"
+         data-trail-destination-value="<%= trail[:destination].to_json %>">
+  <div data-trail-target="canvas" class="absolute inset-0"></div>
+
+  <div data-trail-target="message" hidden
+       class="absolute inset-0 grid place-items-center bg-slate-100 p-8 text-center">
+    <div class="max-w-sm">
+      <p class="font-semibold text-slate-800">The map couldn't be loaded</p>
+      <p class="mt-1 text-sm text-slate-500">Check that <code class="rounded bg-white px-1 py-0.5 text-xs">MAPS_JS_API_KEY</code> is set in <code class="rounded bg-white px-1 py-0.5 text-xs">.env</code> and that the Maps JavaScript API is enabled for it (see setup.md, section 12).</p>
+    </div>
+  </div>
+
+  <ul class="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-x-4 gap-y-1 rounded-lg bg-white/90 px-3 py-2 text-xs text-slate-600 shadow ring-1 ring-slate-200 backdrop-blur">
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-green-600"></span>Source</li>
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-slate-900"></span>Destination</li>
+    <li class="flex items-center gap-1.5"><span class="h-0.5 w-4 rounded bg-indigo-500"></span>Trail</li>
+    <% unless @shipment.delivered? %>
+      <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full" style="background-color: <%= status_style(@shipment.current_status)[:hex] %>"></span>Current</li>
+    <% end %>
+  </ul>
+</section>

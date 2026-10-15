@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { createMap, dotPin, fitToPoints, infoContent } from "maps/google_maps"
 
 // Dashboard map: one marker per shipment at its latest location.
 // Clicking a list row (or a marker) highlights the pair and centers the map on it.
@@ -13,30 +14,15 @@ export default class extends Controller {
   async connect() {
     this.entries = new Map() // shipment id -> { data, marker, pin }
 
-    if (!window.googleMapsLoaded) return this.showMessage()
-    window.addEventListener("gmaps:auth-failure", this.showMessage)
+    const api = await createMap(this.canvasTarget, { onError: this.showMessage })
+    if (!api || !this.element.isConnected) return // failed, or navigated away while loading
 
-    if (window.googleMapsAuthFailed) this.showMessage()
-    await window.googleMapsLoaded
-    if (!this.element.isConnected) return // navigated away while the API loaded
-
-    const { Map: GoogleMap, InfoWindow } = await google.maps.importLibrary("maps")
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker")
-
-    this.map = new GoogleMap(this.canvasTarget, {
-      center: { lat: 20, lng: 0 },
-      zoom: 2,
-      mapId: "DEMO_MAP_ID", // required by AdvancedMarkerElement
-      disableDefaultUI: true,
-      zoomControl: true,
-      fullscreenControl: true,
-      clickableIcons: false
-    })
-    this.infoWindow = new InfoWindow({ headerDisabled: true })
+    this.map = api.map
+    this.infoWindow = new api.InfoWindow({ headerDisabled: true })
 
     this.markersValue.forEach((data) => {
       const pin = this.buildPin(data)
-      const marker = new AdvancedMarkerElement({
+      const marker = new api.AdvancedMarkerElement({
         map: this.map,
         position: { lat: data.lat, lng: data.lng },
         content: pin,
@@ -46,11 +32,11 @@ export default class extends Controller {
       this.entries.set(data.id, { data, marker, pin })
     })
 
-    this.fitAll()
+    fitToPoints(this.map, this.markersValue)
+    this.selectedIdValueChanged(this.selectedIdValue)
   }
 
   disconnect() {
-    window.removeEventListener("gmaps:auth-failure", this.showMessage)
     this.entries?.forEach(({ marker }) => (marker.map = null))
     this.infoWindow?.close()
   }
@@ -73,7 +59,10 @@ export default class extends Controller {
     this.map.panTo(entry.marker.position)
     if (this.map.getZoom() < this.zoomValue) this.map.setZoom(this.zoomValue)
 
-    this.infoWindow.setContent(this.buildInfo(entry.data))
+    const { identifier, status, address, recordedAt } = entry.data
+    this.infoWindow.setContent(
+      infoContent(identifier, status, [address, new Date(recordedAt).toLocaleString()].filter(Boolean).join(" · "))
+    )
     this.infoWindow.open({ map: this.map, anchor: entry.marker })
 
     if (scrollRow) {
@@ -94,48 +83,15 @@ export default class extends Controller {
     })
   }
 
-  fitAll() {
-    if (this.entries.size === 0) return
-    const bounds = new google.maps.LatLngBounds()
-    this.entries.forEach(({ marker }) => bounds.extend(marker.position))
-    this.map.fitBounds(bounds, 64)
-    // A single marker would otherwise zoom to street level.
-    google.maps.event.addListenerOnce(this.map, "idle", () => {
-      if (this.map.getZoom() > 12) this.map.setZoom(12)
-    })
-  }
-
   showMessage = () => {
     if (this.hasMessageTarget) this.messageTarget.hidden = false
   }
 
   buildPin({ color, identifier }) {
-    const pin = document.createElement("div")
-    pin.setAttribute("aria-label", identifier)
-    pin.className =
-      "size-5 cursor-pointer rounded-full border-[3px] border-white shadow-lg ring-0 transition " +
-      "hover:scale-125 aria-selected:scale-150 aria-selected:ring-8 aria-selected:ring-indigo-500/30"
-    pin.style.backgroundColor = color
-    return pin
-  }
-
-  buildInfo({ identifier, status, address, recordedAt }) {
-    const box = document.createElement("div")
-    box.className = "min-w-40 p-1 font-sans text-sm"
-
-    const title = document.createElement("p")
-    title.className = "font-semibold text-slate-900"
-    title.textContent = identifier
-
-    const meta = document.createElement("p")
-    meta.className = "text-slate-600"
-    meta.textContent = status
-
-    const when = document.createElement("p")
-    when.className = "text-xs text-slate-500"
-    when.textContent = [address, new Date(recordedAt).toLocaleString()].filter(Boolean).join(" · ")
-
-    box.append(title, meta, when)
-    return box
+    return dotPin({
+      color,
+      label: identifier,
+      extra: "ring-0 aria-selected:scale-150 aria-selected:ring-8 aria-selected:ring-indigo-500/30"
+    })
   }
 }

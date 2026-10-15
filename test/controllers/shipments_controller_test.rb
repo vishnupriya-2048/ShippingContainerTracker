@@ -139,4 +139,36 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal 1, queries.size
   end
+
+  test "show passes the trail to the map controller as data values" do
+    shipment = create_shipment
+    shipment.locations.create!(latitude: 13.1, longitude: 77.6, recorded_at: 2.hours.ago)
+    shipment.locations.create!(latitude: 13.2, longitude: 78.0, recorded_at: 1.hour.ago, address: "Hosur Road")
+
+    get shipment_url(shipment)
+
+    map = css_select("[data-controller=trail]").first
+    path = JSON.parse(map["data-trail-path-value"])
+    assert_equal [ [ 13.1, 77.6 ], [ 13.2, 78.0 ] ], path.map { |p| [ p["lat"], p["lng"] ] }
+    current = JSON.parse(map["data-trail-current-value"])
+    assert_equal [ 13.2, "Hosur Road" ], [ current["lat"], current["address"] ]
+    assert_in_delta 13.0285, JSON.parse(map["data-trail-source-value"])["lat"]
+    assert_in_delta 80.2206, JSON.parse(map["data-trail-destination-value"])["lng"]
+  end
+
+  test "show works for a shipment with no locations" do
+    get shipment_url(create_shipment)
+    assert_response :success
+    assert_equal({}, JSON.parse(css_select("[data-controller=trail]").first["data-trail-current-value"]))
+    assert_includes response.body, "No location reported yet"
+  end
+
+  test "show flags a delivered shipment as arrived for the map" do
+    shipment = create_shipment(current_status: "delivered")
+    get shipment_url(shipment)
+    assert_equal "true", css_select("[data-controller=trail]").first["data-trail-arrived-value"]
+
+    get shipment_url(create_shipment(shipment_identifier: "EN-ROUTE"))
+    assert_equal "false", css_select("[data-controller=trail]").first["data-trail-arrived-value"]
+  end
 end

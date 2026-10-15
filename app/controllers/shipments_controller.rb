@@ -6,6 +6,7 @@ class ShipmentsController < ApplicationController
   end
 
   def show
+    @locations = @shipment.locations.to_a
   end
 
   def new
