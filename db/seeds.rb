@@ -1,8 +1,9 @@
-# Idempotent: shipments are found by identifier, and a trail is only inserted
-# when the shipment has none. Safe to run repeatedly.
+# Idempotent: shipments are found by identifier, and a trail is only published
+# when the shipment has no locations yet. Safe to run repeatedly.
 #
-# TEMPORARY: locations are written straight to the DB. Step 8 replaces this with
-# publishing to Kafka so that no location bypasses the consumer.
+# Seeds create only shipments. Trails are published to the `shipment_locations`
+# Kafka topic, so locations and status changes are written by the consumer
+# (`docker compose up -d karafka` must be running) and never directly to the DB.
 require_relative "seeds/trail_builder"
 
 SAMPLE_DIR = Rails.root.join("sampleRoutes")
@@ -41,6 +42,22 @@ SHIPMENTS.each_with_index do |spec, index|
 
   next if shipment.locations.exists?
 
-  rows = builder.timestamped(points, ends_at: Time.current - (index + 1).hours)
-  ShipmentLocation.insert_all(rows.map { |r| r.merge(shipment_id: shipment.id) })
+  # Timestamps are anchored to the shipment's created_at (not "now"), so a re-run
+  # before the consumer has caught up republishes identical messages, which the
+  # unique [shipment_id, recorded_at] index then ignores.
+  rows = builder.timestamped(points, ends_at: shipment.created_at.change(usec: 0))
+  messages = rows.map do |row|
+    {
+      topic: "shipment_locations",
+      key: shipment.shipment_identifier,
+      payload: {
+        shipment_identifier: shipment.shipment_identifier,
+        latitude: row[:latitude], longitude: row[:longitude],
+        recorded_at: (row[:recorded_at].to_f * 1000).round,
+        address: row[:address], speed: row[:speed]
+      }.compact.to_json
+    }
+  end
+  Karafka.producer.produce_many_sync(messages)
+  puts "#{shipment.shipment_identifier}: published #{messages.size} points to Kafka"
 end

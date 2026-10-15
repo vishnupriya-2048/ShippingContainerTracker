@@ -3,7 +3,7 @@
 class KarafkaApp < Karafka::App
   setup do |config|
     config.kafka = { 'bootstrap.servers': ENV.fetch('KAFKA_BROKERS', '127.0.0.1:9092') }
-    config.client_id = "YOUR_APP_NAME-#{Process.pid}-#{Socket.gethostname}"
+    config.client_id = "shipment_tracker-#{Process.pid}-#{Socket.gethostname}"
 
     # IMPORTANT: Customize this group_id with your application name.
     # The group_id should be unique per application to properly track message consumption.
@@ -16,7 +16,7 @@ class KarafkaApp < Karafka::App
     #
     # For more details on consumer groups and routing configuration, please refer to the
     # Karafka documentation: https://karafka.io/docs
-    config.group_id = 'YOUR_APP_NAME_consumer'
+    config.group_id = 'shipment_tracker_consumer'
     # Recreate consumers with each batch. This will allow Rails code reload to work in the
     # development mode. Otherwise Karafka process would not be aware of code changes
     config.consumer_persistence = !Rails.env.development?
@@ -72,21 +72,26 @@ class KarafkaApp < Karafka::App
     # Uncomment this if you use Karafka with ActiveJob
     # You need to define the topic per each queue name you use
     # active_job_topic :default
-    topic :example do
-      consumer ExampleConsumer
+    topic :shipment_locations do
+      consumer ShipmentLocationsConsumer
     end
   end
 
-  # Uncomment this if you want Karafka to manage your topics configuration
-  # Declarative topics allow you to ensure topic config consistency across multiple environments
-  #
-  # declaratives.draw do
-  #   topic :example do
-  #     partitions 2
-  #     replication_factor 1
-  #     config 'cleanup.policy': 'compact'
-  #   end
-  # end
+  # Messages are keyed by shipment_identifier, so one shipment always lands on the
+  # same partition and stays ordered while different shipments run in parallel.
+  # Create/update the topics with `bundle exec karafka topics migrate`.
+  declaratives.draw do
+    topic :shipment_locations do
+      partitions 3
+      replication_factor 1
+    end
+
+    topic :shipment_locations_dlq do
+      active false
+      partitions 1
+      replication_factor 1
+    end
+  end
 end
 
 # Karafka now features a Web UI!

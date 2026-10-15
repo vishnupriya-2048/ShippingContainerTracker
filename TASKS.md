@@ -75,17 +75,17 @@ Barebones backend only: DB + endpoints, plain unstyled views are fine.
 - Checkpoint: in the console, call `LocationIngestor` with a few points and see status history appear.
 
 ## Step 7 — `feature/kafka-integration`
-- [ ] Remove the generated `example` consumer and topic route.
-- [ ] Topic `shipment_locations` (use several partitions, keyed by `shipment_identifier` so one shipment's messages stay ordered).
-- [ ] `ShipmentLocationsConsumer`: parse JSON, validate payload (required fields, shipment exists, numeric ranges), call `LocationIngestor`; send bad messages to a log/dead-letter topic instead of crashing.
-- [ ] Simulator (producer): a rake task `rake simulator:run[shipment_identifier]` that publishes the trail's points at an interval, with the README's JSON format (epoch milliseconds).
-- [ ] Run via `docker compose up -d karafka`.
-- [ ] Integration test: publish -> consume -> records exist.
+- [x] Remove the generated `example` consumer and topic route.
+- [x] Topic `shipment_locations` (use several partitions, keyed by `shipment_identifier` so one shipment's messages stay ordered).
+- [x] `ShipmentLocationsConsumer`: parse JSON, validate payload (required fields, shipment exists, numeric ranges), call `LocationIngestor`; send bad messages to a log/dead-letter topic instead of crashing.
+- [x] Simulator (producer): a rake task `rake simulator:run[shipment_identifier]` that publishes the trail's points at an interval, with the README's JSON format (epoch milliseconds).
+- [x] Run via `docker compose up -d karafka`.
+- [x] Integration test: publish -> consume -> records exist.
 - Checkpoint: start the simulator and watch locations and status changes appear in the DB.
 
 ## Step 8 — `feature/seeds-via-kafka`
-- [ ] Seeds create only shipments; trails and statuses come from publishing to Kafka (so no direct DB writes for locations).
-- [ ] Update setup instructions in the project README.
+- [x] Seeds create only shipments; trails and statuses come from publishing to Kafka (so no direct DB writes for locations).
+- [x] Update setup instructions in the project README.
 
 ## Step 9 — `feature/status-history-tab`
 Detail page tabs (README).
