@@ -60,8 +60,8 @@ Barebones backend only: DB + endpoints, plain unstyled views are fine.
 - Checkpoint: the trail draws correctly for each seeded shipment.
 
 ## Step 6 — `feature/geofence-service` (pure Ruby, no Kafka yet)
-- [ ] `Geo::Haversine.distance_m(lat1, lng1, lat2, lng2)`; unit tests with known distances.
-- [ ] `GeofenceEvaluator` — given a shipment + a new point, returns the new status or nil:
+- [ ] `Haversine.meters_between(lat1, lng1, lat2, lng2)`; unit tests with known distances.
+- [ ] `GeofenceEvaluator.evaluate` — given a shipment + a new point, returns the new status or nil:
   - <= 500 m from source -> `prepared`
   - >= 1 km from source -> `picked_up`
   - >= 3 km from source -> `in_transit`
@@ -69,15 +69,15 @@ Barebones backend only: DB + endpoints, plain unstyled views are fine.
   - <= 500 m from destination -> `delivered`
   - `exception`: manual override (and, bonus: route deviation).
 - [ ] Define the rule order and "no regression" (a delivered shipment never goes back); document the decision.
-- [ ] `LocationIngestor` service: takes a validated payload -> creates `ShipmentLocation` -> evaluates geofence -> creates `ShipmentStatusHistory` + updates `current_status` in one DB transaction.
+- [ ] `LocationRecorder` service: takes a validated payload -> creates `ShipmentLocation` -> evaluates geofence -> creates `ShipmentStatusHistory` + updates `current_status` in one DB transaction.
 - [ ] Idempotency: unique index on `[shipment_id, recorded_at]` so replayed messages don't duplicate.
 - [ ] Tests for each transition and for duplicates.
-- Checkpoint: in the console, call `LocationIngestor` with a few points and see status history appear.
+- Checkpoint: in the console, call `LocationRecorder` with a few points and see status history appear.
 
 ## Step 7 — `feature/kafka-integration`
 - [x] Remove the generated `example` consumer and topic route.
 - [x] Topic `shipment_locations` (use several partitions, keyed by `shipment_identifier` so one shipment's messages stay ordered).
-- [x] `ShipmentLocationsConsumer`: parse JSON, validate payload (required fields, shipment exists, numeric ranges), call `LocationIngestor`; send bad messages to a log/dead-letter topic instead of crashing.
+- [x] `ShipmentLocationsConsumer`: parse JSON (`LocationPayload`), validate payload (required fields, shipment exists, numeric ranges), call `LocationRecorder`; send bad messages to a log/dead-letter topic instead of crashing.
 - [x] Simulator (producer): a rake task `rake simulator:run[shipment_identifier]` that publishes the trail's points at an interval, with the README's JSON format (epoch milliseconds).
 - [x] Run via `docker compose up -d karafka`.
 - [x] Integration test: publish -> consume -> records exist.

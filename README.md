@@ -19,7 +19,7 @@ Open <http://localhost:3000>.
 ### How seeding works
 
 `db:seed` creates 5 shipments (`SEED-0001`..`SEED-0005`) and **publishes** each trail
-(>= 50 points, from `sampleRoutes/` or generated) to the `shipment_locations` topic.
+(>= 50 points, from `db/seeds/routes/` or generated) to the `shipment_locations` topic.
 It never writes locations directly. The `karafka` container consumes them, creating
 locations and status history, so after a few seconds the dashboard fills in.
 If `karafka` is not running, the points wait in Kafka and are processed when it starts.
@@ -61,9 +61,14 @@ docker compose run --rm web bin/rails db:seed
 - **Everything flows through Kafka.** Locations are never written by the web app; the
   consumer calls `LocationRecorder`, which stores the point and applies the geofence
   in one transaction. Replays are harmless thanks to the unique `[shipment_id, recorded_at]` index.
-- **Status rules live in one class** (`StatusDecider`): statuses only move forward,
+- **Status rules live in one class** (`GeofenceEvaluator`): statuses only move forward,
   `delivered` is final, and `exception` is a manual override the geofence never changes
-  (use "Mark as exception" on the shipment page).
+  (use "Mark as exception" on the shipment page). A shipment starts as `prepared`, so
+  its status history begins at the first change (`picked_up`). The status cannot be
+  edited by hand; it only changes through the geofence or "Mark as exception".
+- **Validation in one place.** `LocationPayload` checks a message's shape and types;
+  value ranges are enforced by the model validations and DB check constraints.
+  Anything invalid goes to the dead-letter topic.
 - **Thin front end.** Server-rendered ERB + Tailwind; Stimulus controllers (`map`, `trail`,
   `tabs`) get their data as JSON values, with no inline JS. Tabs only toggle `hidden`, so
   the map is never reloaded when switching tabs.
@@ -84,9 +89,4 @@ docker compose run --rm web bin/rails db:seed
 - Authentication and authorization (the app is open today); rate limiting on forms.
 - Live updates via ActionCable, route-deviation `exception`, and error tracking.
 - Secrets via credentials/secret manager; restrict the Maps key by HTTP referrer.
-
-## Screenshots
-
-Not included yet: run the app, seed, start the simulator, and capture the dashboard and a
-shipment page (both tabs) into `docs/`.
 
