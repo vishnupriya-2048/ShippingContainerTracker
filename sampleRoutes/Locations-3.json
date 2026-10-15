@@ -1,0 +1,960 @@
+[
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA",
+    "temperature": 30.2
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851483,
+    "longitude": -117.184617,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851441,
+    "longitude": -117.184597,
+    "address": "Shoreham Place, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.858086,
+    "longitude": -117.190161,
+    "address": "Werner Street, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.851718,
+    "longitude": -117.215166,
+    "address": "Governor Drive, San Diego, San Diego County, California, 92122, USA"
+  },
+  {
+    "latitude": 32.909574,
+    "longitude": -117.172815,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909622,
+    "longitude": -117.172947,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.910604,
+    "longitude": -117.176758,
+    "address": "Cobra Way, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.90967,
+    "longitude": -117.172942,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909666,
+    "longitude": -117.172972,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.912822,
+    "longitude": -117.181347,
+    "address": "Canopy Ridge Lane, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909668,
+    "longitude": -117.172939,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.90967,
+    "longitude": -117.172932,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909668,
+    "longitude": -117.172939,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.910209,
+    "longitude": -117.177307,
+    "address": "Cobra Way, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909668,
+    "longitude": -117.172939,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.90967,
+    "longitude": -117.17294,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909669,
+    "longitude": -117.172946,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.91231,
+    "longitude": -117.180861,
+    "address": "Canopy Ridge Lane, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909664,
+    "longitude": -117.172975,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909641,
+    "longitude": -117.172939,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909553,
+    "longitude": -117.172832,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909542,
+    "longitude": -117.172873,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909594,
+    "longitude": -117.172906,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909548,
+    "longitude": -117.17283,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909549,
+    "longitude": -117.172887,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909641,
+    "longitude": -117.172958,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.909557,
+    "longitude": -117.17287,
+    "address": "Heater Court, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.90964,
+    "longitude": -117.172958,
+    "address": "Top Gun Street, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.913944,
+    "longitude": -117.180953,
+    "address": "Canopy Ridge Lane, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.894509,
+    "longitude": -117.194185,
+    "address": "Mira Mesa Boulevard, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.885124,
+    "longitude": -117.197139,
+    "address": "Eastgate Drive, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.892017,
+    "longitude": -117.198005,
+    "address": "Oberlin Drive, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.894232,
+    "longitude": -117.198058,
+    "address": "Morehouse Drive, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.892808,
+    "longitude": -117.196454,
+    "address": "Mira Mesa Boulevard, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 32.895593,
+    "longitude": -117.198184,
+    "address": "Morehouse Drive, Sorrento Valley, San Diego, San Diego County, California, 92121, USA"
+  },
+  {
+    "latitude": 33.443931,
+    "longitude": -117.140799,
+    "address": "Escondido Freeway, Temecula, Riverside County, California, 92592, USA"
+  },
+  {
+    "latitude": 34.024071,
+    "longitude": -117.381507,
+    "address": "Agua Mansa Road, Crestmore, Jurupa Valley, Riverside County, California, 92509, USA"
+  },
+  {
+    "latitude": 34.024071,
+    "longitude": -117.381507,
+    "address": "Agua Mansa Road, Crestmore, Jurupa Valley, Riverside County, California, 92509, USA"
+  },
+  {
+    "latitude": 34.019555,
+    "longitude": -117.383813,
+    "address": "Wilson Street, Crestmore, Jurupa Valley, Riverside County, California, 92509, USA"
+  },
+  {
+    "latitude": 34.036745,
+    "longitude": -117.37607,
+    "address": "Kiningham Drive, Rialto, San Bernardino County, California, 92316, USA"
+  },
+  {
+    "latitude": 34.023653,
+    "longitude": -117.383046,
+    "address": "Agua Mansa Road, Crestmore, Jurupa Valley, Riverside County, California, 92509, USA"
+  },
+  {
+    "latitude": 34.017735,
+    "longitude": -117.384225,
+    "address": "Via Cerro, Belltown, Jurupa Valley, Riverside County, California, 92509, USA"
+  },
+  {
+    "latitude": 34.0452792,
+    "longitude": -117.3758417,
+    "address": "US-CA, FedEx Ground, United States, us, San Bernardino County, 330, Truck Yards, 92316, Resource Drive, California, Rialto"
+  },
+  {
+    "latitude": 34.056524,
+    "longitude": -117.372535,
+    "address": "West Santa Ana Avenue, Rialto, San Bernardino County, California, 92316, USA"
+  },
+  {
+    "latitude": 33.925672,
+    "longitude": -116.839172,
+    "address": "Johnson Lane, Banning, Riverside County, California, 92230, USA"
+  },
+  {
+    "latitude": 33.66963,
+    "longitude": -115.905049,
+    "address": "I 10, Riverside County, California, USA"
+  },
+  {
+    "latitude": 33.624411,
+    "longitude": -115.032385,
+    "address": "Paled Dunes Drive, Riverside County, California, USA"
+  },
+  {
+    "latitude": 33.6760078,
+    "longitude": -114.1264325,
+    "address": "US-AZ, United States, us, La Paz County, 85346, Pearl Harbor Memorial Highway, Arizona, Quartzsite"
+  },
+  {
+    "latitude": 33.507581,
+    "longitude": -113.044421,
+    "address": "487th Avenue, Tonopah, Maricopa County, Arizona, 85354, USA"
+  },
+  {
+    "latitude": 33.42511,
+    "longitude": -112.597926,
+    "address": "South 255th Drive, Westpark, Buckeye, Maricopa County, Arizona, 85326, USA"
+  },
+  {
+    "latitude": 33.491956,
+    "longitude": -112.215587,
+    "address": "North 72nd Lane, Maryvale, Phoenix, Maricopa County, Arizona, 85033, USA"
+  },
+  {
+    "latitude": 33.1332632,
+    "longitude": -111.8469801,
+    "address": "US-AZ, United States, us, Pinal County, Sweetwater / S-iʼovĭ Shu:dagĭ, 85121, West Nelson Road, Arizona"
+  },
+  {
+    "latitude": 32.380952,
+    "longitude": -111.113704,
+    "address": "West Linda Boulevard, Marana, Pima County, Arizona, 85743, USA"
+  },
+  {
+    "latitude": 31.966977,
+    "longitude": -110.280394,
+    "address": "East McNeil Road, Benson, Cochise County, Arizona, 85602, USA"
+  },
+  {
+    "latitude": 32.316015,
+    "longitude": -109.412814,
+    "address": "Frontage Road, Bowie, Cochise County, Arizona, 85605, USA"
+  },
+  {
+    "latitude": 32.2281784,
+    "longitude": -108.0936007,
+    "address": "US-NM, United States, us, Luna County, Gage, Pearl Harbor Memorial Highway, New Mexico"
+  },
+  {
+    "latitude": 32.292771,
+    "longitude": -106.844637,
+    "address": "Wagon Wheel Trail, Fairacres, Doña Ana County, New Mexico, 88007, USA"
+  },
+  {
+    "latitude": 31.695797,
+    "longitude": -106.273242,
+    "address": "Bill Burnett Drive, El Paso, El Paso County, Texas, 79928, USA",
+    "temperature": 30
+  },
+  {
+    "latitude": 31.44624,
+    "longitude": -106.030083,
+    "address": "US-TX, United States, us, El Paso County, 79853, I 10, Texas"
+  },
+  {
+    "latitude": 31.095408,
+    "longitude": -105.070398,
+    "address": "US 80, Arispe, Sierra Blanca, Hudspeth County, Texas, 79851, USA"
+  },
+  {
+    "latitude": 30.995802,
+    "longitude": -103.770572,
+    "address": "County Road 327, Balmorhea, Reeves County, Texas, 79718, USA"
+  },
+  {
+    "latitude": 30.906363,
+    "longitude": -102.872158,
+    "address": "I 10;US 67, Fort Stockton, Pecos County, Texas, 79735, USA"
+  },
+  {
+    "latitude": 30.8570321,
+    "longitude": -102.0746426,
+    "address": "US-TX, United States, us, Pecos County, I 10 Service Road, Texas"
+  },
+  {
+    "latitude": 30.652109,
+    "longitude": -100.931464,
+    "address": "Sutton County, Texas, USA"
+  },
+  {
+    "latitude": 30.614245,
+    "longitude": -100.775905,
+    "address": "Simmons Ranch, Sutton County, Texas, 76950, USA",
+    "temperature": 30
+  },
+  {
+    "latitude": 30.614236,
+    "longitude": -100.773322,
+    "address": "Simmons Ranch, Sutton County, Texas, 76950, USA"
+  },
+  {
+    "latitude": 30.614236,
+    "longitude": -100.773322,
+    "address": "Simmons Ranch, Sutton County, Texas, 76950, USA"
+  },
+  {
+    "latitude": 30.470449,
+    "longitude": -100.309136,
+    "address": "I 10, Sonora, Sutton County, Texas, 76950, USA"
+  },
+  {
+    "latitude": 30.162501,
+    "longitude": -99.244196,
+    "address": "I 10, Harper, Gillespie County, Texas, 78058, USA"
+  },
+  {
+    "latitude": 29.470805,
+    "longitude": -98.517945,
+    "address": "Santa Anna Street, Los Angeles Heights - Keystone, San Antonio, Bexar County, Texas, 78201, USA"
+  },
+  {
+    "latitude": 29.615653,
+    "longitude": -97.835825,
+    "address": "I 10, Seguin, Guadalupe County, Texas, 78155, USA"
+  },
+  {
+    "latitude": 29.6887174,
+    "longitude": -96.6678236,
+    "address": "US-TX, United States, us, Colorado County, 78962, I-10 Frontage Road, Texas, Weimar"
+  },
+  {
+    "latitude": 29.786653,
+    "longitude": -95.573568,
+    "address": "Wycliffe Drive, Houston, Harris County, Texas, 77043, USA"
+  },
+  {
+    "latitude": 29.838474,
+    "longitude": -94.66102,
+    "address": "I 10 Frontage Road, Eminence, Wallisville, Chambers County, Texas, 77597, USA"
+  },
+  {
+    "latitude": 30.124566,
+    "longitude": -93.885129,
+    "address": "Glenwood Drive, Orange, Orange County, Texas, 77630, USA"
+  },
+  {
+    "latitude": 30.2430657,
+    "longitude": -92.8301639,
+    "address": "US-LA, Welsh Airport, United States, us, Jefferson Davis Parish, 70591, Millard Street, Louisiana, Welsh"
+  },
+  {
+    "latitude": 30.292814,
+    "longitude": -91.915654,
+    "address": "Degeyter Road, Breaux Bridge, Saint Martin Parish, Louisiana, 70517, USA"
+  },
+  {
+    "latitude": 30.416294,
+    "longitude": -91.460533,
+    "address": "Rosedale, Iberville Parish, Louisiana, 70740, USA"
+  },
+  {
+    "latitude": 30.478497,
+    "longitude": -90.482816,
+    "address": "South Morrison Boulevard, Hammond, Tangipahoa Parish, Louisiana, 70403, USA"
+  },
+  {
+    "latitude": 30.345373,
+    "longitude": -89.477926,
+    "address": "I 10, Bay Saint Louis, Hancock County, Mississippi, 39556, USA"
+  },
+  {
+    "latitude": 30.435703,
+    "longitude": -88.526566,
+    "address": "MS 63, Ford, Moss Point, Jackson County, Mississippi, 39563, USA"
+  },
+  {
+    "latitude": 30.64507,
+    "longitude": -88.066511,
+    "address": "South Broad Street, Mobile, Mobile County, Alabama, 36615, USA"
+  },
+  {
+    "latitude": 30.54967,
+    "longitude": -87.337481,
+    "address": "Jacks Branch Road, Ashbury Hills, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.548165,
+    "longitude": -87.341456,
+    "address": "Jarrod Drive, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.548165,
+    "longitude": -87.341456,
+    "address": "Jarrod Drive, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.548165,
+    "longitude": -87.341456,
+    "address": "Jarrod Drive, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.549485,
+    "longitude": -87.335969,
+    "address": "Jacks Branch Road, Ashbury Hills, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.549485,
+    "longitude": -87.335969,
+    "address": "Jacks Branch Road, Ashbury Hills, Gonzalez, Escambia County, Florida, 32533, USA"
+  },
+  {
+    "latitude": 30.604271,
+    "longitude": -86.998607,
+    "address": "New Lake Road, East Milton, Santa Rosa County, Florida, 32583, USA"
+  },
+  {
+    "latitude": 30.707782,
+    "longitude": -85.932411,
+    "address": "FL 81, Ponce de Leon, Ponce de Leon, Holmes County, Florida, 32455, USA"
+  },
+  {
+    "latitude": 30.638749,
+    "longitude": -84.886915,
+    "address": "I 10, Chattahoochee, Gadsden County, Florida, 32324, USA"
+  },
+  {
+    "latitude": 30.483244,
+    "longitude": -84.411365,
+    "address": "I 10, Ochlockonee Pointe, Midway, Gadsden County, Florida, 32343, USA"
+  },
+  {
+    "latitude": 30.430117,
+    "longitude": -83.588597,
+    "address": "I 10, Greenville, Madison County, Florida, 32331, USA"
+  },
+  {
+    "latitude": 30.026881,
+    "longitude": -82.616214,
+    "address": "Southwest County Road 349, Lake City, Columbia County, Florida, 32024, USA"
+  },
+  {
+    "latitude": 29.628562,
+    "longitude": -82.391479,
+    "address": "Southwest 62nd Boulevard, Gainesville, Alachua County, Florida, 32608, USA"
+  },
+  {
+    "latitude": 28.832588,
+    "longitude": -82.037148,
+    "address": "Florida's Turnpike, Village of Richmond, Monarch, Wildwood, Sumter County, Florida, 34785, USA"
+  },
+  {
+    "latitude": 28.448915,
+    "longitude": -81.42145,
+    "address": "Florida's Turnpike, Oak Ridge, Orange County, Florida, 32819, USA"
+  },
+  {
+    "latitude": 27.650394,
+    "longitude": -80.821389,
+    "address": "US-FL, United States, us, Indian River County, Florida"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.220045,
+    "longitude": -80.402484,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221679,
+    "longitude": -80.405039,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.220116,
+    "longitude": -80.401441,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.221679,
+    "longitude": -80.405039,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.220116,
+    "longitude": -80.401441,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.220045,
+    "longitude": -80.402484,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222108,
+    "longitude": -80.407371,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.22104,
+    "longitude": -80.405579,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222318,
+    "longitude": -80.407931,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.222318,
+    "longitude": -80.407931,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.221522,
+    "longitude": -80.407192,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 27.216389,
+    "longitude": -80.403189,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.216366,
+    "longitude": -80.403221,
+    "address": "I 95, Port Saint Lucie, Saint Lucie County, Florida, 34987, USA"
+  },
+  {
+    "latitude": 27.221993,
+    "longitude": -80.40588,
+    "address": "Port Saint Lucie, Saint Lucie County, Florida, USA"
+  },
+  {
+    "latitude": 26.572367,
+    "longitude": -80.175178,
+    "address": "Hypoluxo Road, Greenacres, Palm Beach County, Florida, 33467, USA"
+  },
+  {
+    "latitude": 26.260176,
+    "longitude": -80.153626,
+    "address": "West Copans Road, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.261569,
+    "longitude": -80.15435,
+    "address": "West Copans Road, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.258378,
+    "longitude": -80.154447,
+    "address": "Northwest 22nd Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.25811,
+    "longitude": -80.155796,
+    "address": "Northwest 22nd Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.253527,
+    "longitude": -80.162794,
+    "address": "Blount Road, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.265464,
+    "longitude": -80.170706,
+    "address": "Florida's Turnpike, Coconut Creek, Broward County, Florida, 33066, USA"
+  },
+  {
+    "latitude": 26.261799,
+    "longitude": -80.162225,
+    "address": "Northwest 26th Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.262062,
+    "longitude": -80.162349,
+    "address": "Northwest 26th Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.261852,
+    "longitude": -80.162196,
+    "address": "Northwest 26th Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.261715,
+    "longitude": -80.162163,
+    "address": "Northwest 26th Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.262148,
+    "longitude": -80.162546,
+    "address": "Northwest 26th Street, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.233838,
+    "longitude": -80.172298,
+    "address": "Vantage at Palm Aire, Pompano Beach, Broward County, Florida, 33069, USA"
+  },
+  {
+    "latitude": 26.102857,
+    "longitude": -80.303396,
+    "address": "Southwest 116th Avenue, Rexmere Village, Pine Island, Broward County, Florida, 33325, USA"
+  },
+  {
+    "latitude": 26.175682,
+    "longitude": -80.274377,
+    "address": "Northwest 93rd Avenue, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  },
+  {
+    "latitude": 26.187929,
+    "longitude": -80.268447,
+    "address": "North Pine Island Road, Sunrise, Broward County, Florida, 33351, USA"
+  }
+]

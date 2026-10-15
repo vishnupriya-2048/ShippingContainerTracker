@@ -1,0 +1,29 @@
+<h1>Shipments</h1>
+
+<p><%= link_to "New shipment", new_shipment_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Identifier</th>
+      <th>Status</th>
+      <th>Source</th>
+      <th>Destination</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @shipments.each do |shipment| %>
+      <tr>
+        <td><%= link_to shipment.shipment_identifier, shipment %></td>
+        <td><%= shipment.current_status.humanize %></td>
+        <td><%= shipment.source_address %></td>
+        <td><%= shipment.destination_address %></td>
+        <td>
+          <%= link_to "Edit", edit_shipment_path(shipment) %>
+          <%= button_to "Delete", shipment, method: :delete, form: { data: { turbo_confirm: "Delete this shipment?" } } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

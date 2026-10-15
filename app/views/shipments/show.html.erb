@@ -1,0 +1,19 @@
+<p><%= notice %></p>
+
+<h1><%= @shipment.shipment_identifier %></h1>
+
+<dl>
+  <dt>Status</dt>
+  <dd><%= @shipment.current_status.humanize %></dd>
+  <dt>Weight (kg)</dt>
+  <dd><%= @shipment.weight %></dd>
+  <dt>Height (cm)</dt>
+  <dd><%= @shipment.height %></dd>
+  <dt>Source</dt>
+  <dd><%= @shipment.source_address %> (<%= @shipment.source_latitude %>, <%= @shipment.source_longitude %>)</dd>
+  <dt>Destination</dt>
+  <dd><%= @shipment.destination_address %> (<%= @shipment.destination_latitude %>, <%= @shipment.destination_longitude %>)</dd>
+</dl>
+
+<%= link_to "Edit", edit_shipment_path(@shipment) %> |
+<%= link_to "Back to shipments", shipments_path %>
