@@ -63,7 +63,8 @@
      data-trail-current-value="<%= trail[:current].to_json %>"
      data-trail-source-value="<%= trail[:source].to_json %>"
      data-trail-destination-value="<%= trail[:destination].to_json %>"
-     data-trail-statuses-value="<%= trail[:statuses].to_json %>">
+     data-trail-statuses-value="<%= trail[:statuses].to_json %>"
+     data-trail-points-value="<%= trail[:points].to_json %>">
 <section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]">
   <div data-trail-target="canvas" class="absolute inset-0"></div>
 
@@ -88,7 +89,7 @@
 
 <section class="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200" data-controller="tabs">
   <div role="tablist" aria-label="Shipment history" class="flex gap-1 border-b border-slate-200 px-3 pt-2">
-    <% [["Status History", @status_histories.size]].each_with_index do |(label, count), i| %>
+    <% [["Status History", @status_histories.size], ["Location Trail", @locations.size]].each_with_index do |(label, count), i| %>
       <button type="button" role="tab" id="tab-<%= i %>" aria-controls="panel-<%= i %>"
               aria-selected="<%= i.zero? %>" tabindex="<%= i.zero? ? 0 : -1 %>"
               data-tabs-target="tab" data-action="click->tabs#show keydown->tabs#key" data-tabs-index-param="<%= i %>"
@@ -120,6 +121,31 @@
           </li>
         <% end %>
       </ol>
+    <% end %>
+  </div>
+
+  <div role="tabpanel" id="panel-1" aria-labelledby="tab-1" data-tabs-target="panel" hidden class="p-4">
+    <% if @locations.empty? %>
+      <p class="py-6 text-center text-sm text-slate-500">No location reported yet. Run the simulator to publish points for this shipment.</p>
+    <% else %>
+      <div class="max-h-96 overflow-y-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="sticky top-0 bg-white text-xs uppercase tracking-wide text-slate-500">
+            <tr><th class="py-2 pr-3 font-medium">#</th><th class="py-2 pr-3 font-medium">Recorded</th><th class="py-2 pr-3 font-medium">Coordinates</th><th class="py-2 text-right font-medium">Speed</th></tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 tabular-nums">
+            <% @locations.each_with_index do |location, i| %>
+              <tr tabindex="0" aria-selected="false" data-action="click->trail#focusPoint keydown.enter->trail#focusPoint" data-trail-index-param="<%= i %>"
+                  class="cursor-pointer transition hover:bg-slate-50 aria-selected:bg-indigo-50">
+                <td class="py-2 pr-3 text-slate-400"><%= i + 1 %></td>
+                <td class="py-2 pr-3"><time datetime="<%= location.recorded_at.iso8601 %>"><%= l(location.recorded_at, format: :long) %></time></td>
+                <td class="py-2 pr-3 text-slate-600"><%= location.latitude.round(5) %>, <%= location.longitude.round(5) %></td>
+                <td class="py-2 text-right text-slate-600"><%= location.speed ? "#{location.speed.round(1)} km/h" : "—" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     <% end %>
   </div>
 </section>

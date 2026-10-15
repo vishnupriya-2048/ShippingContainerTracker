@@ -8,6 +8,7 @@ class ShipmentsController < ApplicationController
   def show
     @locations = @shipment.locations.to_a
     @status_histories = @shipment.status_histories.to_a
+    @status_histories = @shipment.status_histories.to_a
   end
 
   def new

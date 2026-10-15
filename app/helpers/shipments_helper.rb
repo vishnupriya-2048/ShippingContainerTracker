@@ -29,6 +29,7 @@ module ShipmentsHelper
     {
       arrived: shipment.delivered?,
       path: locations.map { |l| { lat: l.latitude, lng: l.longitude } },
+      points: locations.map { |l| { lat: l.latitude, lng: l.longitude, recordedAt: l.recorded_at.iso8601, address: l.address } },
       statuses: status_histories.map do |h|
         {
           id: h.id,

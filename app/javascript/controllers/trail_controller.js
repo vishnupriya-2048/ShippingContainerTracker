@@ -11,7 +11,8 @@ export default class extends Controller {
     current: Object,    // { lat, lng, color, status, address, recordedAt } or {}
     source: Object,     // { lat, lng, address }
     destination: Object,
-    statuses: Array     // status-change markers: [{ id, lat, lng, status, color, glyph, address, notes, changedAt }]
+    statuses: Array,    // status-change markers: [{ id, lat, lng, status, color, glyph, address, notes, changedAt }]
+    points: Array      // every GPS point, in table order: [{ lat, lng, recordedAt, address }]
   }
 
   async connect() {
@@ -113,6 +114,24 @@ export default class extends Controller {
     const { data, marker } = entry
     this.panTo(data)
     this.showInfo(marker, data.status, data.address, [new Date(data.changedAt).toLocaleString(), data.notes].filter(Boolean).join(" · "))
+  }
+
+  // Action: click / Enter on a Location Trail row.
+  focusPoint(event) {
+    const row = event.currentTarget
+    row.closest("tbody").querySelectorAll("[aria-selected=true]").forEach((r) => r.setAttribute("aria-selected", "false"))
+    row.setAttribute("aria-selected", "true")
+
+    const point = this.pointsValue[event.params.index]
+    if (!point || !this.map) return
+    if (!this.pointMarker) {
+      const pin = dotPin({ color: "#4338ca", label: "Selected point", size: "size-5", extra: "ring-8 ring-indigo-500/30" })
+      this.pointMarker = new this.api.AdvancedMarkerElement({ map: this.map, content: pin, title: "Selected point", zIndex: 20 })
+      this.overlays.push(this.pointMarker)
+    }
+    this.pointMarker.position = { lat: point.lat, lng: point.lng }
+    this.panTo(point)
+    this.infoWindow.close()
   }
 
   panTo(point) {

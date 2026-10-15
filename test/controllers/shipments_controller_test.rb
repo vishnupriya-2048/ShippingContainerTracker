@@ -183,8 +183,10 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
 
     statuses = JSON.parse(css_select("[data-controller=trail]").first["data-trail-statuses-value"])
     assert_equal [ history.id, "Picked up" ], [ statuses.first["id"], statuses.first["status"] ]
-    assert_select "[data-tabs-target=panel]", 1
+    assert_select "[data-tabs-target=panel]", 2
     assert_select "[data-action='trail#focusStatus']", 1
+    assert_select "tr[data-trail-index-param]", 2
+    assert_includes response.body, "42.5 km/h"
     assert_includes response.body, "Left depot"
   end
 end
