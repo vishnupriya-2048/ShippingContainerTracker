@@ -90,3 +90,19 @@ docker compose run --rm web bin/rails db:seed
 - Live updates via ActionCable, route-deviation `exception`, and error tracking.
 - Secrets via credentials/secret manager; restrict the Maps key by HTTP referrer.
 
+
+## Screenshots
+
+Dashboard: latest location of every shipment, with status counts.
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+Shipment detail: metadata and the GPS trail on the map.
+
+![Shipment detail](docs/screenshots/shipment-detail.png)
+
+![Trail with direction arrows and status markers](docs/screenshots/shipment-trail-map.png)
+
+New shipment form.
+
+![New shipment form](docs/screenshots/new-shipment-form.png)
