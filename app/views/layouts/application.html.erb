@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Shipment Tracker" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,21 +9,42 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= render "layouts/google_maps" %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="flex h-full flex-col bg-slate-50 text-slate-900 antialiased">
+    <header class="z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <nav class="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-5">
+        <%= link_to root_path, class: "flex items-center gap-2.5 font-semibold tracking-tight" do %>
+          <span class="grid size-8 place-items-center rounded-lg bg-indigo-600 text-white shadow-sm shadow-indigo-600/30">
+            <svg class="size-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg>
+          </span>
+          Shipment Tracker
+        <% end %>
+        <%= link_to new_shipment_path, class: "inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700" do %>
+          <span aria-hidden="true" class="text-base leading-none">+</span> New shipment
+        <% end %>
+      </nav>
+    </header>
+
+    <% if notice.present? %>
+      <p class="border-b border-emerald-200 bg-emerald-50 px-5 py-2 text-center text-sm text-emerald-800"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="border-b border-red-200 bg-red-50 px-5 py-2 text-center text-sm text-red-800"><%= alert %></p>
+    <% end %>
+
+    <main class="<%= content_for?(:main_class) ? yield(:main_class) : "mx-auto w-full max-w-3xl px-5 py-8" %>">
       <%= yield %>
     </main>
   </body>

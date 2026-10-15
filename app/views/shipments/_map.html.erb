@@ -1,0 +1,25 @@
+<section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]">
+  <div data-trail-target="canvas" class="absolute inset-0"></div>
+
+  <div data-trail-target="loading" class="absolute inset-0 grid place-items-center bg-slate-100 text-sm text-slate-500">
+    <span class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"></span>Loading map…</span>
+  </div>
+
+  <div data-trail-target="message" hidden
+       class="absolute inset-0 grid place-items-center bg-slate-100 p-8 text-center">
+    <div class="max-w-sm">
+      <p class="font-semibold text-slate-800">The map couldn't be loaded</p>
+      <p class="mt-1 text-sm text-slate-500">Check that <code class="rounded bg-white px-1 py-0.5 text-xs">MAPS_JS_API_KEY</code> is set in <code class="rounded bg-white px-1 py-0.5 text-xs">.env</code> and that the Maps JavaScript API is enabled for it (see setup.md, section 12).</p>
+    </div>
+  </div>
+
+  <ul class="pointer-events-none absolute bottom-3 left-3 flex flex-wrap gap-x-4 gap-y-1 rounded-lg bg-white/90 px-3 py-2 text-xs text-slate-600 shadow ring-1 ring-slate-200 backdrop-blur">
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-green-600"></span>Source</li>
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-slate-900"></span>Destination</li>
+    <li class="flex items-center gap-1.5"><span class="h-0.5 w-4 rounded bg-indigo-500"></span>Trail</li>
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-amber-500 ring-2 ring-white"></span>Status change</li>
+    <% unless shipment.delivered? %>
+      <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full" style="background-color: <%= status_style(shipment.current_status)[:color] %>"></span>Current</li>
+    <% end %>
+  </ul>
+</section>

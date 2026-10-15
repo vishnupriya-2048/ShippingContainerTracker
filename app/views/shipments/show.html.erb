@@ -1,0 +1,95 @@
+<% content_for :main_class, "mx-auto w-full max-w-6xl space-y-6 px-5 py-8" %>
+<% content_for :title, "#{@shipment.shipment_identifier} · Shipment Tracker" %>
+<% last_location = @locations.last %>
+
+<div class="flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <%= link_to shipments_path, class: "text-sm text-slate-500 hover:text-indigo-600" do %>
+      <span aria-hidden="true">&larr;</span> All shipments
+    <% end %>
+    <div class="mt-1 flex flex-wrap items-center gap-3">
+      <h1 class="text-2xl font-semibold tracking-tight"><%= @shipment.shipment_identifier %></h1>
+      <%= status_badge(@shipment.current_status) %>
+    </div>
+    <p class="mt-1 text-sm text-slate-500">
+      <% if last_location %>
+        <%= pluralize(@locations.size, "location update") %> · last seen
+        <time datetime="<%= last_location.recorded_at.iso8601 %>" title="<%= format_time(last_location.recorded_at) %>"><%= time_ago_in_words(last_location.recorded_at) %> ago</time>
+      <% else %>
+        No location reported yet
+      <% end %>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= link_to "Edit", edit_shipment_path(@shipment),
+          class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50" %>
+    <% if @shipment.can_mark_exception? %>
+      <%= button_to "Mark as exception", mark_exception_shipment_path(@shipment), method: :patch,
+            form: { data: { turbo_confirm: "Mark this shipment as an exception? The geofence will no longer change its status." } },
+            class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-amber-700 ring-1 ring-inset ring-amber-200 transition hover:bg-amber-50" %>
+    <% end %>
+    <%= button_to "Delete", @shipment, method: :delete,
+          form: { data: { turbo_confirm: "Delete this shipment and its location history?" } },
+          class: "rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-red-600 ring-1 ring-inset ring-red-200 transition hover:bg-red-50" %>
+  </div>
+</div>
+
+<section aria-label="Shipment details" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <% [
+       ["Weight", "#{number_with_delimiter(@shipment.weight)} kg"],
+       ["Height", "#{number_with_delimiter(@shipment.height)} cm"]
+     ].each do |label, value| %>
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+      <p class="text-xs font-medium uppercase tracking-wide text-slate-500"><%= label %></p>
+      <p class="mt-1 text-lg font-semibold tabular-nums"><%= value %></p>
+    </div>
+  <% end %>
+
+  <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+      <span class="grid size-4 place-items-center rounded-full bg-green-600 text-[9px] font-bold text-white">A</span> Source
+    </p>
+    <p class="mt-1 text-sm font-medium text-slate-800"><%= @shipment.source_address %></p>
+  </div>
+
+  <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+      <span class="grid size-4 place-items-center rounded-full bg-slate-900 text-[9px] font-bold text-white">B</span> Destination
+    </p>
+    <p class="mt-1 text-sm font-medium text-slate-800"><%= @shipment.destination_address %></p>
+  </div>
+</section>
+
+<% trail = trail_data_for(@shipment, @locations, @status_histories) %>
+<div class="space-y-6"
+     data-controller="trail"
+     data-trail-arrived-value="<%= trail[:arrived] %>"
+     data-trail-current-value="<%= trail[:current].to_json %>"
+     data-trail-source-value="<%= trail[:source].to_json %>"
+     data-trail-destination-value="<%= trail[:destination].to_json %>"
+     data-trail-statuses-value="<%= trail[:statuses].to_json %>"
+     data-trail-points-value="<%= trail[:points].to_json %>">
+  <%= render "map", shipment: @shipment %>
+
+  <section class="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200" data-controller="tabs">
+    <div role="tablist" aria-label="Shipment history" class="flex gap-1 border-b border-slate-200 px-3 pt-2">
+      <% [["Status History", @status_histories.size], ["Location Trail", @locations.size]].each_with_index do |(label, count), i| %>
+        <button type="button" role="tab" id="tab-<%= i %>" aria-controls="panel-<%= i %>"
+                aria-selected="<%= i.zero? %>" tabindex="<%= i.zero? ? 0 : -1 %>"
+                data-tabs-target="tab" data-action="click->tabs#show keydown->tabs#key" data-tabs-index-param="<%= i %>"
+                class="-mb-px rounded-t-lg border-b-2 border-transparent px-4 py-2 text-sm font-medium text-slate-500 transition hover:text-slate-800 aria-selected:border-indigo-500 aria-selected:text-indigo-600">
+          <%= label %> <span class="ml-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-xs tabular-nums text-slate-600"><%= count %></span>
+        </button>
+      <% end %>
+    </div>
+
+    <div role="tabpanel" id="panel-0" aria-labelledby="tab-0" data-tabs-target="panel" class="p-4">
+      <%= render "status_history", status_histories: @status_histories %>
+    </div>
+
+    <div role="tabpanel" id="panel-1" aria-labelledby="tab-1" data-tabs-target="panel" hidden class="p-4">
+      <%= render "location_trail", locations: @locations %>
+    </div>
+  </section>
+</div>
