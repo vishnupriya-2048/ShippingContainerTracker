@@ -32,10 +32,28 @@ function fail(onError) {
   return null
 }
 
-// A round, coloured marker. Style it further with aria-selected:* Tailwind variants.
-export function dotPin({ color, label, size = "size-5", extra = "" }) {
+// Colors for the markers that aren't status-driven (statuses get theirs from the server).
+export const MARKER_COLORS = {
+  source: "#16a34a",
+  destination: "#0f172a",
+  delivered: "#10b981",
+  selectedPoint: "#4338ca"
+}
+
+// Same instant, same zone as the server-rendered times.
+export function formatTime(iso) {
+  const text = new Date(iso).toLocaleString("en-US", {
+    month: "long", day: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "UTC"
+  })
+  return `${text} UTC`
+}
+
+// A round, colored marker. Style it further with aria-selected:* Tailwind variants.
+export function dotPin({ color, label, glyph = "", size = "size-5", extra = "" }) {
   const pin = document.createElement("div")
   pin.setAttribute("aria-label", label)
+  pin.textContent = glyph
   pin.className =
     `${size} grid cursor-pointer place-items-center rounded-full border-[3px] border-white text-[10px] ` +
     `font-bold text-white shadow-lg transition hover:scale-125 ${extra}`

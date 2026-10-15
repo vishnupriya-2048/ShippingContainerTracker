@@ -1,8 +1,8 @@
-<%= form_with model: shipment do |form| %>
+<%= form_with model: shipment, class: "space-y-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200" do |form| %>
   <% if shipment.errors.any? %>
-    <div>
-      <h2><%= pluralize(shipment.errors.count, "error") %> prevented this shipment from being saved:</h2>
-      <ul>
+    <div class="rounded-lg bg-red-50 p-4 text-sm text-red-800 ring-1 ring-inset ring-red-200">
+      <h2 class="font-semibold"><%= pluralize(shipment.errors.count, "error") %> prevented this shipment from being saved:</h2>
+      <ul class="mt-2 list-disc pl-5">
         <% shipment.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,46 +10,60 @@
     </div>
   <% end %>
 
+  <% field_class = "mt-1 block w-full rounded-lg border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-indigo-500" %>
+  <% label_class = "block text-sm font-medium text-slate-700" %>
+
   <div>
-    <%= form.label :shipment_identifier %>
-    <%= form.text_field :shipment_identifier %>
-  </div>
-  <div>
-    <%= form.label :current_status %>
-    <%= form.select :current_status, Shipment.current_statuses.keys.map { |s| [s.humanize, s] } %>
-  </div>
-  <div>
-    <%= form.label :weight, "Weight (kg)" %>
-    <%= form.number_field :weight, step: :any %>
-  </div>
-  <div>
-    <%= form.label :height, "Height (cm)" %>
-    <%= form.number_field :height, step: :any %>
-  </div>
-  <div>
-    <%= form.label :source_address %>
-    <%= form.text_field :source_address %>
-  </div>
-  <div>
-    <%= form.label :source_latitude %>
-    <%= form.number_field :source_latitude, step: :any %>
-  </div>
-  <div>
-    <%= form.label :source_longitude %>
-    <%= form.number_field :source_longitude, step: :any %>
-  </div>
-  <div>
-    <%= form.label :destination_address %>
-    <%= form.text_field :destination_address %>
-  </div>
-  <div>
-    <%= form.label :destination_latitude %>
-    <%= form.number_field :destination_latitude, step: :any %>
-  </div>
-  <div>
-    <%= form.label :destination_longitude %>
-    <%= form.number_field :destination_longitude, step: :any %>
+    <%= form.label :shipment_identifier, class: label_class %>
+    <%= form.text_field :shipment_identifier, class: field_class %>
   </div>
 
-  <%= form.submit %>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <%= form.label :weight, "Weight (kg)", class: label_class %>
+      <%= form.number_field :weight, step: :any, class: field_class %>
+    </div>
+    <div>
+      <%= form.label :height, "Height (cm)", class: label_class %>
+      <%= form.number_field :height, step: :any, class: field_class %>
+    </div>
+  </div>
+
+  <fieldset class="space-y-4">
+    <legend class="text-sm font-semibold text-slate-900">Source</legend>
+    <div>
+      <%= form.label :source_address, class: label_class %>
+      <%= form.text_field :source_address, class: field_class %>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <%= form.label :source_latitude, class: label_class %>
+        <%= form.number_field :source_latitude, step: :any, class: field_class %>
+      </div>
+      <div>
+        <%= form.label :source_longitude, class: label_class %>
+        <%= form.number_field :source_longitude, step: :any, class: field_class %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="space-y-4">
+    <legend class="text-sm font-semibold text-slate-900">Destination</legend>
+    <div>
+      <%= form.label :destination_address, class: label_class %>
+      <%= form.text_field :destination_address, class: field_class %>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <%= form.label :destination_latitude, class: label_class %>
+        <%= form.number_field :destination_latitude, step: :any, class: field_class %>
+      </div>
+      <div>
+        <%= form.label :destination_longitude, class: label_class %>
+        <%= form.number_field :destination_longitude, step: :any, class: field_class %>
+      </div>
+    </div>
+  </fieldset>
+
+  <%= form.submit class: "cursor-pointer rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-700" %>
 <% end %>

@@ -1,0 +1,22 @@
+<% if locations.empty? %>
+  <p class="py-6 text-center text-sm text-slate-500">No location reported yet. Run the simulator to publish points for this shipment.</p>
+<% else %>
+  <div class="max-h-96 overflow-y-auto">
+    <table class="w-full text-left text-sm">
+      <thead class="sticky top-0 bg-white text-xs uppercase tracking-wide text-slate-500">
+        <tr><th class="py-2 pr-3 font-medium">#</th><th class="py-2 pr-3 font-medium">Recorded</th><th class="py-2 pr-3 font-medium">Coordinates</th><th class="py-2 text-right font-medium">Speed</th></tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 tabular-nums">
+        <% locations.each_with_index do |location, i| %>
+          <tr tabindex="0" aria-selected="false" data-action="click->trail#focusPoint keydown.enter->trail#focusPoint" data-trail-index-param="<%= i %>"
+              class="cursor-pointer transition hover:bg-slate-50 aria-selected:bg-indigo-50">
+            <td class="py-2 pr-3 text-slate-400"><%= i + 1 %></td>
+            <td class="py-2 pr-3"><time datetime="<%= location.recorded_at.iso8601 %>"><%= format_time(location.recorded_at) %></time></td>
+            <td class="py-2 pr-3 text-slate-600"><%= location.latitude.round(5) %>, <%= location.longitude.round(5) %></td>
+            <td class="py-2 text-right text-slate-600"><%= location.speed ? "#{location.speed.round(1)} km/h" : "—" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

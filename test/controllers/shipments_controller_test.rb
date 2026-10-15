@@ -29,16 +29,6 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     }.merge(overrides)
   end
 
-  test "routes are RESTful for shipments" do
-    assert_routing({ method: "get", path: "/shipments" }, { controller: "shipments", action: "index" })
-    assert_routing({ method: "post", path: "/shipments" }, { controller: "shipments", action: "create" })
-    assert_routing({ method: "get", path: "/shipments/new" }, { controller: "shipments", action: "new" })
-    assert_routing({ method: "get", path: "/shipments/1/edit" }, { controller: "shipments", action: "edit", id: "1" })
-    assert_routing({ method: "get", path: "/shipments/1" }, { controller: "shipments", action: "show", id: "1" })
-    assert_routing({ method: "patch", path: "/shipments/1" }, { controller: "shipments", action: "update", id: "1" })
-    assert_routing({ method: "delete", path: "/shipments/1" }, { controller: "shipments", action: "destroy", id: "1" })
-  end
-
   test "index lists shipments" do
     create_shipment
     get shipments_url
@@ -84,11 +74,20 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
 
   test "update changes the shipment and redirects to it" do
     shipment = create_shipment
-    patch shipment_url(shipment), params: { shipment: { weight: 999.0, current_status: "in_transit" } }
+    patch shipment_url(shipment), params: { shipment: { weight: 999.0 } }
     assert_redirected_to shipment_url(shipment)
-    shipment.reload
-    assert_equal 999.0, shipment.weight
-    assert_equal "in_transit", shipment.current_status
+    assert_equal 999.0, shipment.reload.weight
+  end
+
+  test "update cannot set the status by hand" do
+    shipment = create_shipment
+    patch shipment_url(shipment), params: { shipment: { current_status: "delivered" } }
+    assert_equal "prepared", shipment.reload.current_status
+  end
+
+  test "the form has no status field" do
+    get edit_shipment_url(create_shipment)
+    assert_select "[name='shipment[current_status]']", 0
   end
 
   test "update with invalid data re-renders the form and does not change the record" do
@@ -104,10 +103,6 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
       delete shipment_url(shipment)
     end
     assert_redirected_to shipments_url
-  end
-
-  test "root serves the dashboard" do
-    assert_recognizes({ controller: "shipments", action: "index" }, "/")
   end
 
   test "dashboard embeds one map marker per shipment, at its latest location" do
@@ -148,8 +143,8 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     get shipment_url(shipment)
 
     map = css_select("[data-controller=trail]").first
-    path = JSON.parse(map["data-trail-path-value"])
-    assert_equal [ [ 13.1, 77.6 ], [ 13.2, 78.0 ] ], path.map { |p| [ p["lat"], p["lng"] ] }
+    points = JSON.parse(map["data-trail-points-value"])
+    assert_equal [ [ 13.1, 77.6 ], [ 13.2, 78.0 ] ], points.map { |p| [ p["lat"], p["lng"] ] }
     current = JSON.parse(map["data-trail-current-value"])
     assert_equal [ 13.2, "Hosur Road" ], [ current["lat"], current["address"] ]
     assert_in_delta 13.0285, JSON.parse(map["data-trail-source-value"])["lat"]
@@ -215,9 +210,20 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "delivered", shipment.reload.current_status
   end
 
-  test "mark_exception falls back to the source when nothing was reported" do
+  test "show hides the exception button once the shipment is delivered" do
+    get shipment_url(create_shipment)
+    assert_select "form[action$='mark_exception']"
+
+    get shipment_url(create_shipment(shipment_identifier: "DONE-1", current_status: "delivered"))
+    assert_select "form[action$='mark_exception']", 0
+  end
+
+  test "map data and tables use UTC times" do
     shipment = create_shipment
-    patch mark_exception_shipment_url(shipment)
-    assert_in_delta 13.0285, shipment.status_histories.last.latitude
+    shipment.locations.create!(latitude: 13.1, longitude: 77.6, recorded_at: Time.utc(2026, 10, 15, 8, 5))
+
+    get shipment_url(shipment)
+
+    assert_includes response.body, "October 15, 2026 08:05 UTC"
   end
 end

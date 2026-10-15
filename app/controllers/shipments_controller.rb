@@ -40,10 +40,10 @@ class ShipmentsController < ApplicationController
   end
 
   def mark_exception
-    if @shipment.mark_exception!
+    if @shipment.mark_exception
       redirect_to @shipment, notice: "Shipment was marked as an exception."
     else
-      redirect_to @shipment, alert: "A #{@shipment.current_status.humanize.downcase} shipment can't be marked as an exception."
+      redirect_to @shipment, alert: "A #{helpers.status_label(@shipment.current_status).downcase} shipment can't be marked as an exception."
     end
   end
 
@@ -55,7 +55,7 @@ class ShipmentsController < ApplicationController
 
   def shipment_params
     params.expect(shipment: %i[
-      shipment_identifier weight height current_status
+      shipment_identifier weight height
       source_address destination_address
       source_latitude source_longitude destination_latitude destination_longitude
     ])

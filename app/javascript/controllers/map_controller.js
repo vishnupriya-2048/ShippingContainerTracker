@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
-import { createMap, dotPin, fitToPoints, infoContent } from "maps/google_maps"
+import { createMap, dotPin, fitToPoints, formatTime, infoContent } from "maps/google_maps"
+
+const SELECTED_ZOOM = 9
 
 // Dashboard map: one marker per shipment at its latest location.
 // Clicking a list row (or a marker) highlights the pair and centers the map on it.
@@ -7,8 +9,7 @@ export default class extends Controller {
   static targets = ["canvas", "row", "message"]
   static values = {
     markers: Array,
-    selectedId: Number,
-    zoom: { type: Number, default: 9 }
+    selectedId: Number
   }
 
   async connect() {
@@ -57,11 +58,11 @@ export default class extends Controller {
     if (!entry) return // shipment has no location yet
 
     this.map.panTo(entry.marker.position)
-    if (this.map.getZoom() < this.zoomValue) this.map.setZoom(this.zoomValue)
+    if (this.map.getZoom() < SELECTED_ZOOM) this.map.setZoom(SELECTED_ZOOM)
 
     const { identifier, status, address, recordedAt } = entry.data
     this.infoWindow.setContent(
-      infoContent(identifier, status, [address, new Date(recordedAt).toLocaleString()].filter(Boolean).join(" · "))
+      infoContent(identifier, status, [address, formatTime(recordedAt)].filter(Boolean).join(" · "))
     )
     this.infoWindow.open({ map: this.map, anchor: entry.marker })
 

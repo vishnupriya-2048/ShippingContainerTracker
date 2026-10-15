@@ -1,5 +1,4 @@
 <% content_for :main_class, "flex min-h-0 w-full flex-1 flex-col lg:flex-row" %>
-<% counts = status_counts(@shipments) %>
 
 <div class="contents" data-controller="map"
      data-map-markers-value="<%= map_markers_for(@shipments).to_json %>">
@@ -12,12 +11,7 @@
       </div>
 
       <dl class="grid grid-cols-4 gap-2 text-center">
-        <% [
-             ["Total", @shipments.size, "text-slate-900"],
-             ["In transit", counts.values_at("picked_up", "in_transit", "out_for_delivery").compact.sum, "text-indigo-600"],
-             ["Delivered", counts.fetch("delivered", 0), "text-emerald-600"],
-             ["Exceptions", counts.fetch("exception", 0), "text-red-600"]
-           ].each do |label, value, color| %>
+        <% status_summary(@shipments).each do |label, value, color| %>
           <div class="rounded-xl bg-slate-50 px-2 py-2.5 ring-1 ring-inset ring-slate-200/70">
             <dd class="text-xl font-semibold tabular-nums <%= color %>"><%= value %></dd>
             <dt class="text-[11px] font-medium uppercase tracking-wide text-slate-500"><%= label %></dt>
@@ -58,7 +52,7 @@
             <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
             <% if location %>
               Last seen
-              <time datetime="<%= location.recorded_at.iso8601 %>" title="<%= l(location.recorded_at, format: :long) %>">
+              <time datetime="<%= location.recorded_at.iso8601 %>" title="<%= format_time(location.recorded_at) %>">
                 <%= time_ago_in_words(location.recorded_at) %> ago
               </time>
             <% else %>
