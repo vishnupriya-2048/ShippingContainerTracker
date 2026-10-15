@@ -105,4 +105,38 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to shipments_url
   end
+
+  test "root serves the dashboard" do
+    assert_recognizes({ controller: "shipments", action: "index" }, "/")
+  end
+
+  test "dashboard embeds one map marker per shipment, at its latest location" do
+    shipment = create_shipment
+    shipment.locations.create!(latitude: 13.0, longitude: 77.0, recorded_at: 2.hours.ago)
+    shipment.locations.create!(latitude: 13.5, longitude: 78.5, recorded_at: 1.hour.ago)
+    create_shipment(shipment_identifier: "NO-LOCATION")
+
+    get root_url
+    assert_response :success
+
+    markers = JSON.parse(css_select("[data-controller=map]").first["data-map-markers-value"])
+    assert_equal 1, markers.size
+    assert_equal "MAEU-1001", markers.first["identifier"]
+    assert_in_delta 13.5, markers.first["lat"]
+    assert_select "[data-map-target=row]", 2
+    assert_includes response.body, "No location reported yet"
+  end
+
+  test "dashboard loads latest locations without N+1 queries" do
+    3.times do |i|
+      shipment = create_shipment(shipment_identifier: "SHIP-#{i}")
+      3.times { |n| shipment.locations.create!(latitude: 13.0 + n, longitude: 77.0, recorded_at: n.hours.ago) }
+    end
+
+    queries = []
+    counter = ->(*, payload) { queries << payload[:sql] if payload[:sql].include?("shipment_locations") }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record") { get root_url }
+
+    assert_equal 1, queries.size
+  end
 end

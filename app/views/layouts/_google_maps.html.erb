@@ -1,0 +1,10 @@
+<%# Loads the Google Maps JS API once. `window.googleMapsLoaded` resolves when the
+    script's callback fires, so Stimulus controllers can simply `await` it.
+    The key comes from ENV["MAPS_JS_API_KEY"] (.env, never committed). %>
+<% if ENV["MAPS_JS_API_KEY"].present? %>
+  <script>
+    window.googleMapsLoaded = new Promise((resolve) => { window.initGoogleMaps = resolve })
+    window.gm_authFailure = () => { window.googleMapsAuthFailed = true; window.dispatchEvent(new Event("gmaps:auth-failure")) }
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=<%= ENV["MAPS_JS_API_KEY"] %>&loading=async&libraries=marker&v=weekly&callback=initGoogleMaps"></script>
+<% end %>

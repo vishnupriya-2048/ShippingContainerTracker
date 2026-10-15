@@ -2,7 +2,7 @@ class ShipmentsController < ApplicationController
   before_action :set_shipment, only: %i[show edit update destroy]
 
   def index
-    @shipments = Shipment.order(:shipment_identifier)
+    @shipments = Shipment.includes(:latest_location).order(:shipment_identifier)
   end
 
   def show
