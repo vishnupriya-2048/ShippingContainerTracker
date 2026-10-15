@@ -5,16 +5,11 @@ class ShipmentLocationsConsumerTest < ActiveSupport::TestCase
   class FakeProducer
     attr_reader :sent
     def initialize = @sent = []
-    def produce_async(**message) = @sent << message
+    def produce_sync(**message) = @sent << message
   end
 
   setup do
-    @shipment = Shipment.create!(
-      shipment_identifier: "KAF-1", weight: 1, height: 1,
-      source_address: "A", destination_address: "B",
-      source_latitude: 0, source_longitude: 0,
-      destination_latitude: 0, destination_longitude: 1.0
-    )
+    @shipment = create_shipment(shipment_identifier: "KAF-1")
     @producer = FakeProducer.new
   end
 
@@ -30,9 +25,11 @@ class ShipmentLocationsConsumerTest < ActiveSupport::TestCase
   end
 
   test "valid message creates the location and applies the geofence" do
-    consume(point(longitude: 0.0001))
+    consume(point(longitude: 0.5))
+
     location = @shipment.locations.sole
     assert_equal Time.at(1_729_781_200).utc, location.recorded_at
+    assert_equal "in_transit", @shipment.reload.current_status
     assert_empty @producer.sent
   end
 
@@ -42,12 +39,17 @@ class ShipmentLocationsConsumerTest < ActiveSupport::TestCase
     assert_empty @producer.sent
   end
 
-  test "bad messages go to the dead-letter topic and good ones still process" do
+  test "bad messages go to the dead-letter topic with the reason and good ones still process" do
     consume("not json", point(shipment_identifier: "NOPE"), point(latitude: 123),
             point(recorded_at: "yesterday"), point(recorded_at: 1_729_781_300_000))
+
     assert_equal 1, @shipment.locations.count
     assert_equal 4, @producer.sent.size
-    assert_equal ["shipment_locations_dlq"], @producer.sent.map { |m| m[:topic] }.uniq
+    assert_equal [ "shipment_locations_dlq" ], @producer.sent.map { |m| m[:topic] }.uniq
+    assert_equal [ "KAF-1" ], @producer.sent.map { |m| m[:key] }.uniq
+    assert_match(/malformed JSON/, @producer.sent[0][:headers]["error"])
     assert_match(/unknown shipment NOPE/, @producer.sent[1][:headers]["error"])
+    assert_match(/Latitude/, @producer.sent[2][:headers]["error"])
+    assert_equal point(latitude: 123).to_json, @producer.sent[2][:payload]
   end
 end

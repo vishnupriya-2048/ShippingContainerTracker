@@ -1,10 +1,9 @@
-# Straight-line distance between two GPS points, following the curve of the
-# earth (the "haversine" formula).
-class DistanceCalculator
+# Great-circle distance between two GPS points (the haversine formula).
+class Haversine
   EARTH_RADIUS_M = 6_371_000.0
 
-  # Distance in metres between two lat/lng points given in degrees.
-  def self.metres_between(lat1, lng1, lat2, lng2)
+  # Distance in meters between two lat/lng points given in degrees.
+  def self.meters_between(lat1, lng1, lat2, lng2)
     phi1 = to_radians(lat1)
     phi2 = to_radians(lat2)
     d_phi = to_radians(lat2 - lat1)

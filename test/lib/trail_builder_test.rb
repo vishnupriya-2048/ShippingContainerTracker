@@ -1,5 +1,4 @@
 require "test_helper"
-require Rails.root.join("db/seeds/trail_builder")
 
 class TrailBuilderTest < ActiveSupport::TestCase
   FROM = { latitude: 41.8781, longitude: -87.6298, address: "Chicago" }.freeze
@@ -11,8 +10,8 @@ class TrailBuilderTest < ActiveSupport::TestCase
     points = @builder.interpolate(FROM, TO, count: 60)
 
     assert_equal 60, points.size
-    assert_equal [FROM[:latitude], FROM[:longitude]], points.first.values_at(:latitude, :longitude)
-    assert_equal [TO[:latitude], TO[:longitude]], points.last.values_at(:latitude, :longitude)
+    assert_equal [ FROM[:latitude], FROM[:longitude] ], points.first.values_at(:latitude, :longitude)
+    assert_equal [ TO[:latitude], TO[:longitude] ], points.last.values_at(:latitude, :longitude)
   end
 
   test "timestamped orders points chronologically and ends at ends_at" do

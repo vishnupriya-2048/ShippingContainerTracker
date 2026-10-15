@@ -2,12 +2,7 @@ require "test_helper"
 
 class LocationRecorderTest < ActiveSupport::TestCase
   setup do
-    @shipment = Shipment.create!(
-      shipment_identifier: "ING-1", weight: 1, height: 1,
-      source_address: "A", destination_address: "B",
-      source_latitude: 0, source_longitude: 0,
-      destination_latitude: 0, destination_longitude: 1.0
-    )
+    @shipment = create_shipment(shipment_identifier: "ING-1")
     @t0 = Time.utc(2026, 10, 15, 8, 0)
   end
 
@@ -51,6 +46,15 @@ class LocationRecorderTest < ActiveSupport::TestCase
     assert_no_difference [ "ShipmentLocation.count", "ShipmentStatusHistory.count" ] do
       assert_nil ingest(0.02, 1)
     end
+  end
+
+  test "an older point arriving late is stored but does not regress the status" do
+    ingest(0.5, 5)
+    ingest(0.0001, 1)
+
+    assert_equal 2, @shipment.locations.count
+    assert_equal [ "in_transit" ], @shipment.status_histories.map(&:status)
+    assert_equal "in_transit", @shipment.reload.current_status
   end
 
   test "invalid point raises and changes nothing" do

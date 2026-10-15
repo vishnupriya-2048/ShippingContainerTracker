@@ -6,7 +6,7 @@
 # Returns the ShipmentLocation, or nil if it was a duplicate.
 class LocationRecorder
   def self.record(shipment:, **attributes)
-    new(shipment, attributes).run
+    new(shipment, attributes).call
   end
 
   def initialize(shipment, attributes)
@@ -14,7 +14,7 @@ class LocationRecorder
     @attributes = attributes
   end
 
-  def run
+  def call
     Shipment.transaction do
       @shipment.lock!
       location = @shipment.locations.create!(@attributes)
@@ -28,7 +28,7 @@ class LocationRecorder
   private
 
   def apply_status_change(location)
-    new_status = StatusDecider.new_status_for(@shipment, location.latitude, location.longitude)
+    new_status = GeofenceEvaluator.evaluate(@shipment, location.latitude, location.longitude)
     return unless new_status
 
     @shipment.status_histories.create!(

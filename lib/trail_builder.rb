@@ -1,9 +1,7 @@
-require "json"
-
-# Builds GPS trails for seed shipments: loads sample route files or interpolates a
-# path between two points, then adds timestamps and speeds derived from distance.
+# Builds GPS trails for seed shipments and the simulator: loads sample route files
+# or interpolates a path between two points, then adds timestamps and speeds
+# derived from distance.
 class TrailBuilder
-  EARTH_RADIUS_KM = 6371.0
   STATIONARY_KM = 0.05      # moves smaller than this are GPS jitter, not travel
   STATIONARY_STEP_S = 60
   SPEED_RANGE_KMH = (50.0..90.0)
@@ -35,7 +33,7 @@ class TrailBuilder
       Array.new(dwell, to.slice(:latitude, :longitude, :address))
   end
 
-  # Returns rows ready for ShipmentLocation.insert_all, ending at `ends_at`.
+  # Returns the points with :speed and :recorded_at added, ending at `ends_at`.
   def timestamped(points, ends_at:)
     elapsed = 0.0
     rows = points.each_with_index.map do |point, i|
@@ -60,10 +58,6 @@ class TrailBuilder
   def jitter = @rng.rand(-0.01..0.01)
 
   def distance_km(a, b)
-    lat1, lat2 = [a[:latitude], b[:latitude]].map { |d| d * Math::PI / 180 }
-    dlat = lat2 - lat1
-    dlng = (b[:longitude] - a[:longitude]) * Math::PI / 180
-    h = Math.sin(dlat / 2)**2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlng / 2)**2
-    2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h))
+    Haversine.meters_between(a[:latitude], a[:longitude], b[:latitude], b[:longitude]) / 1000
   end
 end

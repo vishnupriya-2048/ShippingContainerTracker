@@ -1,5 +1,3 @@
-require "json"
-
 namespace :simulator do
   desc "Publish a GPS trail for a shipment to Kafka: simulator:run[SHIPMENT_ID,INTERVAL_SECONDS]"
   task :run, %i[shipment_identifier interval] => :environment do |_t, args|
@@ -7,7 +5,6 @@ namespace :simulator do
     interval = Float(args[:interval] || 1)
     shipment = Shipment.find_by!(shipment_identifier: identifier)
 
-    require Rails.root.join("db/seeds/trail_builder")
     builder = TrailBuilder.new(seed: shipment.id)
     points = builder.interpolate(
       { latitude: shipment.source_latitude, longitude: shipment.source_longitude, address: shipment.source_address },
@@ -23,7 +20,7 @@ namespace :simulator do
         recorded_at: (Time.current.to_f * 1000).to_i,
         address: point[:address], speed: point[:speed]
       }.compact
-      Karafka.producer.produce_sync(topic: "shipment_locations", key: shipment.shipment_identifier, payload: payload.to_json)
+      Karafka.producer.produce_sync(topic: ShipmentLocationsConsumer::TOPIC, key: shipment.shipment_identifier, payload: payload.to_json)
       puts "[#{i + 1}/#{points.size}] #{payload[:latitude].round(4)}, #{payload[:longitude].round(4)}"
       sleep interval unless i == points.size - 1
     end

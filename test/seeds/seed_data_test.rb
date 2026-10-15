@@ -1,10 +1,6 @@
 require "test_helper"
 
 class SeedDataTest < ActiveSupport::TestCase
-  # Fixtures are not used; start from an empty DB so counts are exact.
-  self.use_transactional_tests = true
-  fixtures []
-
   class FakeProducer
     attr_reader :messages
     def initialize = @messages = []
@@ -44,7 +40,7 @@ class SeedDataTest < ActiveSupport::TestCase
     assert_equal Shipment.pluck(:shipment_identifier).sort, by_shipment.keys.sort
     by_shipment.each do |identifier, messages|
       assert_operator messages.size, :>=, 50, "#{identifier} has #{messages.size} points"
-      assert_equal ["shipment_locations"], messages.map { |m| m[:topic] }.uniq
+      assert_equal [ ShipmentLocationsConsumer::TOPIC ], messages.map { |m| m[:topic] }.uniq
       times = messages.map { |m| JSON.parse(m[:payload])["recorded_at"] }
       assert_equal times.sort, times
       assert times.all?(Integer), "recorded_at must be epoch milliseconds"
@@ -56,15 +52,15 @@ class SeedDataTest < ActiveSupport::TestCase
 
     Shipment.find_each do |s|
       points = payloads.select { |p| p["shipment_identifier"] == s.shipment_identifier }
-      assert_equal [s.source_latitude, s.source_longitude], points.first.values_at("latitude", "longitude")
-      assert_equal [s.destination_latitude, s.destination_longitude], points.last.values_at("latitude", "longitude")
+      assert_equal [ s.source_latitude, s.source_longitude ], points.first.values_at("latitude", "longitude")
+      assert_equal [ s.destination_latitude, s.destination_longitude ], points.last.values_at("latitude", "longitude")
     end
   end
 
   test "every published point passes the consumer's validation" do
     load_seeds
 
-    @producer.messages.each { |m| assert LocationMessage.parse(m[:payload]) }
+    @producer.messages.each { |m| assert LocationPayload.parse(m[:payload]) }
   end
 
   test "running seeds twice creates no duplicate shipments and republishes identical messages" do
