@@ -171,4 +171,20 @@ class ShipmentsControllerTest < ActionDispatch::IntegrationTest
     get shipment_url(create_shipment(shipment_identifier: "EN-ROUTE"))
     assert_equal "false", css_select("[data-controller=trail]").first["data-trail-arrived-value"]
   end
+
+  test "show lists status history and location trail rows with map data" do
+    shipment = create_shipment
+    shipment.locations.create!(latitude: 13.1, longitude: 77.6, recorded_at: 2.hours.ago, speed: 42.5)
+    shipment.locations.create!(latitude: 13.2, longitude: 78.0, recorded_at: 1.hour.ago)
+    history = shipment.status_histories.create!(status: "picked_up", latitude: 13.1, longitude: 77.6,
+                                                address: "Hosur Road", notes: "Left depot", changed_at: 2.hours.ago)
+
+    get shipment_url(shipment)
+
+    statuses = JSON.parse(css_select("[data-controller=trail]").first["data-trail-statuses-value"])
+    assert_equal [ history.id, "Picked up" ], [ statuses.first["id"], statuses.first["status"] ]
+    assert_select "[data-tabs-target=panel]", 1
+    assert_select "[data-action='trail#focusStatus']", 1
+    assert_includes response.body, "Left depot"
+  end
 end

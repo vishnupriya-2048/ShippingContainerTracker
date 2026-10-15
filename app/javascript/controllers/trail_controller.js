@@ -10,7 +10,8 @@ export default class extends Controller {
     path: Array,        // [{ lat, lng }, ...] oldest -> newest
     current: Object,    // { lat, lng, color, status, address, recordedAt } or {}
     source: Object,     // { lat, lng, address }
-    destination: Object
+    destination: Object,
+    statuses: Array     // status-change markers: [{ id, lat, lng, status, color, glyph, address, notes, changedAt }]
   }
 
   async connect() {
@@ -21,6 +22,7 @@ export default class extends Controller {
     this.api = api
     this.infoWindow = new api.InfoWindow({ headerDisabled: true })
     this.overlays = []
+    this.statusMarkers = new Map() // status history id -> { marker, data }
 
     this.drawTrail()
     this.addMarker(this.sourceValue, dotPin({ color: "#16a34a", label: "Source", size: "size-7", extra: "" }), "A", "Source")
@@ -31,6 +33,8 @@ export default class extends Controller {
       this.addMarker(this.destinationValue, dotPin({ color: "#0f172a", label: "Destination", size: "size-7", extra: "" }), "B", "Destination")
       if (this.hasCurrent) this.addCurrentMarker()
     }
+
+    this.addStatusMarkers()
 
     fitToPoints(this.map, [this.sourceValue, this.destinationValue, ...this.pathValue], { padding: 56, maxZoom: 14 })
   }
@@ -78,6 +82,47 @@ export default class extends Controller {
     })
     marker.addListener("click", () => this.showInfo(marker, title, point.address))
     this.overlays.push(marker)
+  }
+
+  addStatusMarkers() {
+    this.statusesValue.forEach((data) => {
+      const pin = dotPin({ color: data.color, label: data.status, size: "size-6", extra: "ring-2 ring-white/60" })
+      pin.textContent = data.glyph
+      const marker = new this.api.AdvancedMarkerElement({
+        map: this.map,
+        position: { lat: data.lat, lng: data.lng },
+        content: pin,
+        title: data.status,
+        zIndex: 5
+      })
+      marker.addListener("click", () => this.openStatus(data.id))
+      this.overlays.push(marker)
+      this.statusMarkers.set(data.id, { marker, data })
+    })
+  }
+
+  // Action: click on a Status History row.
+  focusStatus(event) {
+    this.markPressed(event.currentTarget)
+    this.openStatus(event.params.id)
+  }
+
+  openStatus(id) {
+    const entry = this.statusMarkers?.get(id)
+    if (!entry) return
+    const { data, marker } = entry
+    this.panTo(data)
+    this.showInfo(marker, data.status, data.address, [new Date(data.changedAt).toLocaleString(), data.notes].filter(Boolean).join(" · "))
+  }
+
+  panTo(point) {
+    this.map.panTo({ lat: point.lat, lng: point.lng })
+    if (this.map.getZoom() < 12) this.map.setZoom(12)
+  }
+
+  markPressed(button) {
+    button.closest("ol").querySelectorAll("[aria-pressed=true]").forEach((b) => b.setAttribute("aria-pressed", "false"))
+    button.setAttribute("aria-pressed", "true")
   }
 
   addCurrentMarker() {

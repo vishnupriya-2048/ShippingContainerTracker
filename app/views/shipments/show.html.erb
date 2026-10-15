@@ -55,14 +55,16 @@
   </div>
 </section>
 
-<% trail = trail_data_for(@shipment, @locations) %>
-<section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]"
-         data-controller="trail"
-         data-trail-arrived-value="<%= trail[:arrived] %>"
-         data-trail-path-value="<%= trail[:path].to_json %>"
-         data-trail-current-value="<%= trail[:current].to_json %>"
-         data-trail-source-value="<%= trail[:source].to_json %>"
-         data-trail-destination-value="<%= trail[:destination].to_json %>">
+<% trail = trail_data_for(@shipment, @locations, @status_histories) %>
+<div class="space-y-6"
+     data-controller="trail"
+     data-trail-arrived-value="<%= trail[:arrived] %>"
+     data-trail-path-value="<%= trail[:path].to_json %>"
+     data-trail-current-value="<%= trail[:current].to_json %>"
+     data-trail-source-value="<%= trail[:source].to_json %>"
+     data-trail-destination-value="<%= trail[:destination].to_json %>"
+     data-trail-statuses-value="<%= trail[:statuses].to_json %>">
+<section class="relative h-[28rem] overflow-hidden rounded-2xl bg-slate-200 shadow-sm ring-1 ring-slate-200 lg:h-[34rem]">
   <div data-trail-target="canvas" class="absolute inset-0"></div>
 
   <div data-trail-target="message" hidden
@@ -77,8 +79,48 @@
     <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-green-600"></span>Source</li>
     <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-slate-900"></span>Destination</li>
     <li class="flex items-center gap-1.5"><span class="h-0.5 w-4 rounded bg-indigo-500"></span>Trail</li>
+    <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full bg-amber-500 ring-2 ring-white"></span>Status change</li>
     <% unless @shipment.delivered? %>
       <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-full" style="background-color: <%= status_style(@shipment.current_status)[:hex] %>"></span>Current</li>
     <% end %>
   </ul>
 </section>
+
+<section class="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200" data-controller="tabs">
+  <div role="tablist" aria-label="Shipment history" class="flex gap-1 border-b border-slate-200 px-3 pt-2">
+    <% [["Status History", @status_histories.size]].each_with_index do |(label, count), i| %>
+      <button type="button" role="tab" id="tab-<%= i %>" aria-controls="panel-<%= i %>"
+              aria-selected="<%= i.zero? %>" tabindex="<%= i.zero? ? 0 : -1 %>"
+              data-tabs-target="tab" data-action="click->tabs#show keydown->tabs#key" data-tabs-index-param="<%= i %>"
+              class="-mb-px rounded-t-lg border-b-2 border-transparent px-4 py-2 text-sm font-medium text-slate-500 transition hover:text-slate-800 aria-selected:border-indigo-500 aria-selected:text-indigo-600">
+        <%= label %> <span class="ml-1 rounded-full bg-slate-100 px-1.5 py-0.5 text-xs tabular-nums text-slate-600"><%= count %></span>
+      </button>
+    <% end %>
+  </div>
+
+  <div role="tabpanel" id="panel-0" aria-labelledby="tab-0" data-tabs-target="panel" class="p-4">
+    <% if @status_histories.empty? %>
+      <p class="py-6 text-center text-sm text-slate-500">No status changes yet. They appear as the shipment moves past the source and destination geofences.</p>
+    <% else %>
+      <ol class="max-h-96 divide-y divide-slate-100 overflow-y-auto">
+        <% @status_histories.each do |history| %>
+          <li>
+            <button type="button" aria-pressed="false" data-action="trail#focusStatus" data-trail-id-param="<%= history.id %>"
+                    class="flex w-full items-start gap-3 rounded-lg px-2 py-3 text-left transition hover:bg-slate-50 aria-pressed:bg-indigo-50">
+              <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-bold text-white" style="background-color: <%= status_style(history.status)[:hex] %>"><%= status_style(history.status)[:glyph] %></span>
+              <span class="min-w-0 flex-1">
+                <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <%= status_badge(history.status) %>
+                  <time class="text-xs text-slate-500" datetime="<%= history.changed_at.iso8601 %>"><%= l(history.changed_at, format: :long) %></time>
+                </span>
+                <span class="mt-1 block text-sm text-slate-700"><%= history.address.presence || "#{history.latitude.round(4)}, #{history.longitude.round(4)}" %></span>
+                <% if history.notes.present? %><span class="mt-0.5 block text-xs text-slate-500"><%= history.notes %></span><% end %>
+              </span>
+            </button>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
+  </div>
+</section>
+</div>

@@ -23,12 +23,25 @@ module ShipmentsHelper
   end
 
   # Data handed to the Stimulus trail controller on the detail page.
-  def trail_data_for(shipment, locations)
+  def trail_data_for(shipment, locations, status_histories = [])
     current = locations.last
 
     {
       arrived: shipment.delivered?,
       path: locations.map { |l| { lat: l.latitude, lng: l.longitude } },
+      statuses: status_histories.map do |h|
+        {
+          id: h.id,
+          lat: h.latitude,
+          lng: h.longitude,
+          status: h.status.humanize,
+          color: status_style(h.status)[:hex],
+          glyph: status_style(h.status)[:glyph],
+          address: h.address,
+          notes: h.notes,
+          changedAt: h.changed_at.iso8601
+        }
+      end,
       current: current.nil? ? {} : {
         lat: current.latitude,
         lng: current.longitude,
